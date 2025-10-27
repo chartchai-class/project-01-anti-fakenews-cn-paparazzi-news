@@ -260,8 +260,7 @@ const VotePage = () => {
                   <span className="text-gray-800 font-medium">{news.votes.fake + (voting && voteType === 'fake' ? 1 : 0)} 票</span>
                   {news.votes.fake + news.votes.notFake > 0 && (
                     <span className="text-gray-500">
-                      ({((news.votes.fake + (voting && voteType === 'fake' ? 1 : 0)) / 
-                      (news.votes.fake + news.votes.notFake + (voting ? 1 : 0))) * 100).toFixed(1)}%
+                      {((news.votes.fake + (voting && voteType === 'fake' ? 1 : 0)) / (news.votes.fake + news.votes.notFake + (voting ? 1 : 0)) * 100).toFixed(1)}%
                     </span>
                   )}
                 </div>
@@ -270,11 +269,10 @@ const VotePage = () => {
                 <div 
                   className="bg-red-500 h-full rounded-full transition-all duration-700 ease-out"
                   style={{ 
-                    width: `${news.votes.fake + news.votes.notFake > 0 
-                      ? ((news.votes.fake + (voting && voteType === 'fake' ? 1 : 0)) / 
-                      (news.votes.fake + news.votes.notFake + (voting ? 1 : 0))) * 100 
-                      : (voting && voteType === 'fake' ? 100 : 0)}%` 
-                  }}
+                      width: `${news.votes.fake + news.votes.notFake > 0 
+                        ? ((news.votes.fake + (voting && voteType === 'fake' ? 1 : 0)) / (news.votes.fake + news.votes.notFake + (voting ? 1 : 0)) * 100) 
+                        : (voting && voteType === 'fake' ? 100 : 0)}%` 
+                    }}
                 ></div>
               </div>
             </div>
@@ -289,8 +287,7 @@ const VotePage = () => {
                   <span className="text-gray-800 font-medium">{news.votes.notFake + (voting && voteType === 'notFake' ? 1 : 0)} 票</span>
                   {news.votes.fake + news.votes.notFake > 0 && (
                     <span className="text-gray-500">
-                      ({((news.votes.notFake + (voting && voteType === 'notFake' ? 1 : 0)) / 
-                      (news.votes.fake + news.votes.notFake + (voting ? 1 : 0))) * 100).toFixed(1)}%
+                      {((news.votes.notFake + (voting && voteType === 'notFake' ? 1 : 0)) / (news.votes.fake + news.votes.notFake + (voting ? 1 : 0)) * 100).toFixed(1)}%
                     </span>
                   )}
                 </div>
@@ -299,11 +296,10 @@ const VotePage = () => {
                 <div 
                   className="bg-green-500 h-full rounded-full transition-all duration-700 ease-out"
                   style={{ 
-                    width: `${news.votes.fake + news.votes.notFake > 0 
-                      ? ((news.votes.notFake + (voting && voteType === 'notFake' ? 1 : 0)) / 
-                      (news.votes.fake + news.votes.notFake + (voting ? 1 : 0))) * 100 
-                      : (voting && voteType === 'notFake' ? 100 : 0)}%` 
-                  }}
+                      width: `${news.votes.fake + news.votes.notFake > 0 
+                        ? ((news.votes.notFake + (voting && voteType === 'notFake' ? 1 : 0)) / (news.votes.fake + news.votes.notFake + (voting ? 1 : 0)) * 100) 
+                        : (voting && voteType === 'notFake' ? 100 : 0)}%` 
+                    }}
                 ></div>
               </div>
             </div>
