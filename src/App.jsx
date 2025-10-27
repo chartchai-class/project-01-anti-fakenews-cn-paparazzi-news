@@ -192,22 +192,27 @@ function App() {
 
   return (
     <Router>
-      <div className="App min-h-screen flex flex-col bg-gray-100">
-        {/* 头部导航 */}
-        <header className="bg-white shadow-md sticky top-0 z-10">
-          <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-            <h1 className="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-blue-700">
-              <Link to="/" className="flex items-center transition-colors duration-300 hover:text-blue-800">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div className="App min-h-screen flex flex-col">
+        {/* 头部导航 - 毛玻璃效果 */}
+        <header className="glass sticky top-0 z-50 h-16 border-b border-white/20">
+          <div className="container mx-auto px-4 h-full flex justify-between items-center">
+            <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
+              <Link to="/" className="flex items-center group transition-all duration-300 hover:scale-105">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2.5 text-primary-600 group-hover:text-primary-700 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
                 Paparazzi News
               </Link>
             </h1>
             <nav className="hidden md:block">
-              <ul className="flex space-x-8">
+              <ul className="flex space-x-8 items-center">
                 <li>
-                  <Link to="/" className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200 py-2 border-b-2 border-blue-600">首页</Link>
+                  <Link to="/" className="text-gray-700 hover:text-primary-600 font-semibold transition-all duration-300 py-2 px-3 rounded-lg hover:bg-primary-50 flex items-center text-sm border-b-2 border-primary-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    首页
+                  </Link>
                 </li>
               </ul>
             </nav>
@@ -215,7 +220,7 @@ function App() {
         </header>
 
         {/* 主要内容 */}
-        <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           <Routes>
             <Route 
               path="/" 
@@ -242,11 +247,20 @@ function App() {
           </Routes>
         </main>
 
-        {/* 页脚 */}
-        <footer className="bg-gray-800 text-white py-6">
+        {/* 页脚 - 渐变背景 */}
+        <footer className="bg-gradient-to-br from-gray-800 via-gray-900 to-gray-800 text-white py-8 mt-auto">
           <div className="container mx-auto px-4 text-center">
-            <p className="text-gray-300 mb-2">&copy; 2024 Paparazzi News - 新闻真实性协作判断平台</p>
-            <p className="text-sm text-gray-400">通过群体智慧识别假新闻，共建可信信息环境</p>
+            <p className="text-gray-200 mb-3 font-medium">&copy; 2024 Paparazzi News - 新闻真实性协作判断平台</p>
+            <p className="text-sm text-gray-400 mb-4">通过群体智慧识别假新闻，共建可信信息环境</p>
+            <div className="flex justify-center items-center space-x-4 text-gray-400">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 hover:text-primary-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span className="text-xs">透明 · 协作 · 可信</span>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 hover:text-primary-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
           </div>
         </footer>
       </div>
