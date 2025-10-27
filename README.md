@@ -65,19 +65,22 @@ src/
 ├─ App.vue
 └─ main.js
 
-🎨UI Design Specifications
-Category	                       Specification
-Theme	                      Bright News Media Style
-Main Color	                  Blue #2563EB
-False News State Color	      Red #DC2626
-True News State Color	       Green #16A34A
-Font	                       Inter / sans-serif
-Element Style	         Shadow, Rounded Corners, Hover Effects
-Layout Features	   3-column grid, Clean White Space, Clear and  Concise Information Presentation
+🎨 UI / UX Design Specifications
+Category	Specification
+Theme	Bright News Media Style
+Primary Color	Blue #2563EB
+Real News Color	Green #16A34A
+Fake News Color	Red #DC2626
+Font	Sans-serif (system default + clean readability)
+Card Style	White background, shadow, rounded corners
+Layout Pattern	3-column news grid, hover interaction
+UX Principle	“Minimal clicks, clear trust visibility”
 
 
-👥Recommended team division
-Members                  Responsibilities
-shenxinyan    Homepage + Filtering logic + Pagination component
-zhaomeiling	  News detail page + UI for comment page + Routing
-wurunxin	    Voting page + localStorage data + Comment pagination  
+👥 Recommended Team Division    
+✅shenxinyan	Homepage, Filters, Pagination
+
+✅ zhaomeiling	News Detail + Comments Page + Routing
+
+✅ wurunxin	Voting Page + localStorage + Comment Pagination
+
