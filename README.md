@@ -20,6 +20,7 @@ Paparazzi News is a browser-based social anti-fake news system used for:
 | localStorage      | Temporary storage of comments/votes |
 
 🧩 System Architecture
+```bash
 Home (News List)
  ├─ Filter: All / Fake / Real / Neutral
  ├─ Items per page: 5 / 10 / 20
@@ -39,7 +40,9 @@ Vote Page
  ├─ Add comment + evidence URL
  └─ Save to localStorage
 
-📁Recommended directory structure
+## 📁 Recommended Directory Structure
+
+```bash
 src/
 ├─ pages/
 │  ├─ Home.vue
@@ -65,6 +68,7 @@ src/
 ├─ App.vue
 └─ main.js
 
+
 🎨 UI / UX Design Specifications
 Category	Specification
 Theme	Bright News Media Style
@@ -77,10 +81,10 @@ Layout Pattern	3-column news grid, hover interaction
 UX Principle	“Minimal clicks, clear trust visibility”
 
 
-👥 Recommended Team Division    
-✅shenxinyan	Homepage, Filters, Pagination
+👥 Team                  Division    
+✅shenxinyan（20232090）	 Homepage, Filters, Pagination
 
-✅ zhaomeiling	News Detail + Comments Page + Routing
+✅ zhaomeiling	（20232089） News Detail + Comments Page + Routing
 
-✅ wurunxin	Voting Page + localStorage + Comment Pagination
+✅ wurunxin（20232083）  	Voting Page + localStorage + Comment Pagination
 
