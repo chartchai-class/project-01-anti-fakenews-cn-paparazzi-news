@@ -27,9 +27,10 @@ const VotePage = () => {
             setVoteType(hasVoted)
           }
         } else {
-          setError('News not found')
+          setError('新闻不存在')
         }
-      } catch (err) {
+  setError('News does not exist')
+    } catch (err) {
         setError('Failed to load news')
         console.error('Failed to load news details:', err)
       } finally {
@@ -40,45 +41,45 @@ const VotePage = () => {
     fetchNewsDetail()
   }, [id])
 
-  // 处理投票
-  const handleVote = async (type) => {
-    if (voted || voting) {
-      return
-    }
+  // Handle voting
+    const handleVote = async (type) => {
+        if (voted || voting) {
+            return
+        }
 
     try {
-      // 设置投票中状态
-      setVoting(true)
+      // Set voting in progress state
+        setVoting(true)
       
       const success = addVoteToNews(id, type)
       
       if (success) {
-        // 记录用户投票，防止重复投票
+        // Record user vote to prevent duplicate voting
         const userVoteKey = `user_vote_${id}`
         localStorage.setItem(userVoteKey, type)
         
         setVoted(true)
         setVoteType(type)
         
-        // 更新本地新闻数据
+        // Update local news data
         const updatedNews = getNewsById(id)
         setNews(updatedNews)
         
-        // 显示成功消息
+        // Show success message
         setShowSuccessMessage(true)
         
-        // 延迟后重定向，给用户足够的视觉反馈时间
+        // Redirect after delay to give user enough visual feedback time
         setTimeout(() => {
-          navigate(`/news/${id}`)
+            navigate(`/news/${id}`)
         }, 1500)
       } else {
         throw new Error('Voting failed, please try again')
       }
     } catch (err) {
-      // 使用更友好的提示替代alert
-      setError(err.message)
-      // 3秒后清除错误提示
-      setTimeout(() => setError(null), 3000)
+      // Use more user-friendly prompt instead of alert
+        setError(err.message)
+        // Clear error message after 3 seconds
+        setTimeout(() => setError(null), 3000)
     } finally {
       setVoting(false)
     }
@@ -88,7 +89,7 @@ const VotePage = () => {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mb-4"></div>
-        <p className="text-lg text-gray-600">Loading vote page...</p>
+        <p className="text-lg text-gray-600">Loading voting page...</p>
       </div>
     )
   }
@@ -110,9 +111,9 @@ const VotePage = () => {
             d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
           />
         </svg>
-        <p className="text-red-600 text-lg mb-6">{error || 'News not found'}</p>
+        <p className="text-red-600 text-lg mb-6">{error || 'News does not exist'}</p>
         <button
-          className="px-6 py-2 bg-gradient-primary text-white rounded-xl hover:shadow-lg hover:shadow-primary-500/50 transition-all duration-300 font-semibold"
+          className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           onClick={() => navigate('/')}
         >
           Back to Home
@@ -123,7 +124,7 @@ const VotePage = () => {
 
   return (
     <div className="vote-page max-w-2xl mx-auto p-4 md:p-6 min-h-screen flex flex-col">
-      {/* 返回按钮 */}
+      {/* Back Button */}
       <button 
         onClick={() => navigate(-1)} 
         className="flex items-center px-4 py-2.5 glass hover:bg-white/80 rounded-xl mb-6 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 text-gray-700 font-medium hover:scale-105"
@@ -131,28 +132,28 @@ const VotePage = () => {
         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
         </svg>
-        返回上一页
+        Go Back
       </button>
 
       <div className="glass rounded-2xl border border-white/30 shadow-glass-lg p-6 md:p-8 flex-grow">
-        {/* 页面标题 */}
-        <h1 className="text-2xl md:text-3xl font-bold mb-6 text-center bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">判断新闻真实性</h1>
+        {/* Page Title */}
+        <h1 className="text-2xl md:text-3xl font-bold mb-6 text-center bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">Verify News Authenticity</h1>
         
-        {/* 错误提示 */}
+        {/* Error Message */}
         {error && (
           <div className="mb-6 p-3 bg-red-50 text-red-600 rounded-md border border-red-100 text-center animate-shake">
             {error}
           </div>
         )}
         
-        {/* 成功提示 */}
+        {/* Success Message */}
         {showSuccessMessage && (
           <div className="mb-6 p-3 bg-green-50 text-green-600 rounded-md border border-green-100 text-center animate-pulse">
-            Vote successful! Thank you for your participation
+            Voting successful! Thank you for your participation
           </div>
         )}
         
-        {/* 新闻摘要 */}
+        {/* News Summary */}
         <div className="mb-8">
           <h2 className="text-xl font-semibold mb-3 text-gray-800">{news.title}</h2>
           <p className="text-gray-600 line-clamp-4 mb-4 leading-relaxed">{news.content}</p>
@@ -167,14 +168,14 @@ const VotePage = () => {
           )}
         </div>
 
-        {/* 投票提示 */}
+        {/* Voting Instructions */}
         <div className="mb-8 p-4 bg-blue-50 rounded-lg border border-blue-100">
           <p className="text-blue-800 text-center">
-            Please vote on the credibility of this news based on your judgment. Your participation will help the community better identify potentially fake news.
+            Based on your judgment, please vote on the authenticity of this news. Your participation will help the community better identify potential fake news.
           </p>
         </div>
 
-        {/* 投票按钮 */}
+        {/* Voting Buttons */}
         <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mb-8 max-w-md mx-auto">
           <button
             onClick={() => handleVote('fake')}
@@ -245,11 +246,11 @@ const VotePage = () => {
                 />
               </svg>
             )}
-            True News
+            Real News
           </button>
         </div>
 
-        {/* 当前投票结果预览 */}
+        {/* Current Voting Results Preview */}
         <div className="glass p-6 rounded-2xl border border-white/30">
           <h3 className="text-lg font-semibold mb-5 text-gray-800">Current Voting Results</h3>
           
@@ -258,12 +259,12 @@ const VotePage = () => {
               <div className="flex justify-between mb-2 items-center">
                 <div className="flex items-center">
                   <span className="h-3 w-3 rounded-full bg-gradient-fake mr-2 shadow-sm"></span>
-                  <span className="font-semibold text-red-600 whitespace-nowrap">Fake News</span>
+                  <span className="font-semibold text-red-600">Fake News</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-gray-800 font-semibold whitespace-nowrap">{news.votes.fake + (voting && voteType === 'fake' ? 1 : 0)} votes</span>
+                  <span className="text-gray-800 font-semibold">{news.votes.fake + (voting && voteType === 'fake' ? 1 : 0)} votes</span>
                   {news.votes.fake + news.votes.notFake > 0 && (
-                    <span className="text-gray-500 text-sm whitespace-nowrap">
+                    <span className="text-gray-500 text-sm">
                       {((news.votes.fake + (voting && voteType === 'fake' ? 1 : 0)) / (news.votes.fake + news.votes.notFake + (voting ? 1 : 0)) * 100).toFixed(1)}%
                     </span>
                   )}
@@ -285,12 +286,12 @@ const VotePage = () => {
               <div className="flex justify-between mb-2 items-center">
                 <div className="flex items-center">
                   <span className="h-3 w-3 rounded-full bg-gradient-true mr-2 shadow-sm"></span>
-                  <span className="font-semibold text-green-600 whitespace-nowrap">True News</span>
+                  <span className="font-semibold text-green-600">Real News</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-gray-800 font-semibold whitespace-nowrap">{news.votes.notFake + (voting && voteType === 'notFake' ? 1 : 0)} votes</span>
+                  <span className="text-gray-800 font-semibold">{news.votes.notFake + (voting && voteType === 'notFake' ? 1 : 0)} votes</span>
                   {news.votes.fake + news.votes.notFake > 0 && (
-                    <span className="text-gray-500 text-sm whitespace-nowrap">
+                    <span className="text-gray-500 text-sm">
                       {((news.votes.notFake + (voting && voteType === 'notFake' ? 1 : 0)) / (news.votes.fake + news.votes.notFake + (voting ? 1 : 0)) * 100).toFixed(1)}%
                     </span>
                   )}
@@ -310,7 +311,7 @@ const VotePage = () => {
           </div>
           
           <div className="mt-6 text-center text-gray-600 text-sm font-medium">
-            Total Votes: <span className="text-gray-800 font-bold text-base whitespace-nowrap">{news.votes.fake + news.votes.notFake + (voting ? 1 : 0)}</span>
+            Total votes: <span className="text-gray-800 font-bold text-base">{news.votes.fake + news.votes.notFake + (voting ? 1 : 0)}</span>
           </div>
         </div>
       </div>
