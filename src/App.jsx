@@ -47,61 +47,91 @@ function App() {
     const initializeData = () => {
       const storedNews = getNews();
       if (storedNews.length === 0) {
-        // 如果没有数据，创建一些模拟新闻
+        // Mock news data in English
         const mockNews = [
           {
             id: 1,
-            title: '某明星被拍到与神秘女子共进晚餐',
-            content: '据报道，某知名男星昨晚被拍到与一位神秘女子在高档餐厅共进晚餐，两人相谈甚欢...',
+            title: 'Celebrity Spotted Dining with Mystery Woman at Upscale Restaurant',
+            content: 'According to recent reports, a well-known celebrity was photographed dining with an unidentified woman at an upscale restaurant last evening. The two appeared to be in deep conversation throughout their meal. Eyewitnesses claim the encounter lasted over two hours.',
             imageUrl: 'https://picsum.photos/id/1/800/400',
-            reporter: '狗仔队小王',
+            reporter: 'Sarah Johnson',
             publishTime: '2024-01-15T18:30:00',
             votes: { fake: 45, notFake: 23 },
             comments: [
-              { id: 1, userId: 'user1', content: '这看起来像是摆拍', voteType: 'fake', timestamp: '2024-01-15T19:00:00' },
-              { id: 2, userId: 'user2', content: '我觉得是真的，他们已经约会很久了', voteType: 'notFake', timestamp: '2024-01-15T19:30:00' }
+              { id: 1, userId: 'user1', content: 'This looks staged and possibly fake', voteType: 'fake', timestamp: '2024-01-15T19:00:00' },
+              { id: 2, userId: 'user2', content: 'Genuine moment captured naturally', voteType: 'notFake', timestamp: '2024-01-15T19:30:00' }
             ]
           },
           {
             id: 2,
-            title: '专家预测今年房价将大幅上涨',
-            content: '房地产专家在最新访谈中表示，受政策调整和市场需求增加的影响，今年房价预计将上涨20%以上...',
+            title: 'Tech Giant Announces Revolutionary AI Breakthrough',
+            content: 'A leading technology company revealed its latest artificial intelligence innovation that promises to transform how we interact with digital devices. The new system reportedly understands context and nuance better than any previous model, with applications ranging from healthcare to education.',
             imageUrl: 'https://picsum.photos/id/20/800/400',
-            reporter: '财经记者小李',
+            reporter: 'Michael Chen',
             publishTime: '2024-01-14T10:00:00',
             votes: { fake: 120, notFake: 89 },
             comments: [
-              { id: 1, userId: 'user3', content: '这种预测每年都有，不可信', voteType: 'fake', timestamp: '2024-01-14T11:00:00' }
+              { id: 1, userId: 'user3', content: 'Skeptical about the claims until I see real results', voteType: 'fake', timestamp: '2024-01-14T11:00:00' }
             ]
           },
           {
             id: 3,
-            title: '新型健康食品声称能治愈多种疾病',
-            content: '市场上出现一种新型健康食品，厂商宣称其含有特殊成分，能够治愈高血压、糖尿病等多种慢性疾病...',
+            title: 'Scientists Discover New Planet in Habitable Zone',
+            content: 'Astronomers have identified a potentially habitable exoplanet orbiting a star similar to our sun. Located 120 light-years away, this planet receives just the right amount of energy to potentially support liquid water. The discovery opens new possibilities for finding extraterrestrial life.',
             imageUrl: 'https://picsum.photos/id/96/800/400',
-            reporter: '健康专栏记者小张',
+            reporter: 'Dr. Emily Thompson',
             publishTime: '2024-01-13T14:20:00',
             votes: { fake: 203, notFake: 12 },
             comments: []
           },
           {
             id: 4,
-            title: '城市空气质量持续改善',
-            content: '环保部门最新数据显示，我市空气质量指数连续三个月稳步下降，蓝天白云天数明显增加...',
+            title: 'Global Climate Summit Reaches Historic Agreement',
+            content: 'World leaders at the annual climate conference reached a landmark agreement to reduce carbon emissions by 50% over the next decade. The plan includes renewable energy investments, carbon pricing mechanisms, and international cooperation on green technology transfer.',
             imageUrl: 'https://picsum.photos/id/1015/800/400',
-            reporter: '环境记者小陈',
+            reporter: 'James Wilson',
             publishTime: '2024-01-12T09:00:00',
             votes: { fake: 5, notFake: 156 },
             comments: []
           },
           {
             id: 5,
-            title: '新研究发现咖啡可能延长寿命',
-            content: '最新医学研究表明，每天适量饮用咖啡可能有助于延长寿命，降低多种慢性疾病风险...',
+            title: 'New Study Links Exercise to Improved Mental Health',
+            content: 'Research from leading universities shows that regular physical activity significantly reduces symptoms of anxiety and depression. The study followed thousands of participants over five years, demonstrating that even moderate exercise provides substantial mental health benefits.',
             imageUrl: 'https://picsum.photos/id/431/800/400',
-            reporter: '健康编辑小刘',
+            reporter: 'Lisa Anderson',
             publishTime: '2024-01-11T16:45:00',
             votes: { fake: 42, notFake: 58 },
+            comments: []
+          },
+          {
+            id: 6,
+            title: 'Breakthrough in Quantum Computing Achieves New Milestone',
+            content: 'Scientists at a major research institution have successfully demonstrated quantum entanglement over unprecedented distances, bringing practical quantum computers one step closer to reality. The achievement could revolutionize cryptography and complex problem-solving.',
+            imageUrl: 'https://picsum.photos/id/1074/800/400',
+            reporter: 'David Martinez',
+            publishTime: '2024-01-10T11:20:00',
+            votes: { fake: 78, notFake: 142 },
+            comments: []
+          },
+          {
+            id: 7,
+            title: 'Renewable Energy Sets New Global Records',
+            content: 'Solar and wind power installations reached record highs this quarter, accounting for 60% of all new electricity generation capacity worldwide. This milestone marks a significant shift away from fossil fuels towards sustainable energy sources.',
+            imageUrl: 'https://picsum.photos/id/1080/800/400',
+            reporter: 'Amanda Brooks',
+            publishTime: '2024-01-09T14:30:00',
+            votes: { fake: 23, notFake: 189 },
+            comments: []
+          },
+          {
+            id: 8,
+            title: 'Major Breakthrough in Cancer Treatment Research',
+            content: 'Medical researchers have developed a novel immunotherapy approach that shows promise in treating previously untreatable forms of cancer. Early clinical trials demonstrate significant tumor reduction rates with minimal side effects.',
+            imageUrl: 'https://picsum.photos/id/1018/800/400',
+            reporter: 'Dr. Robert Kim',
+            publishTime: '2024-01-08T09:15:00',
+            votes: { fake: 15, notFake: 205 },
             comments: []
           }
         ];
@@ -207,11 +237,11 @@ function App() {
             <nav className="hidden md:block">
               <ul className="flex space-x-8 items-center">
                 <li>
-                  <Link to="/" className="text-gray-700 hover:text-primary-600 font-semibold transition-all duration-300 py-2 px-3 rounded-lg hover:bg-primary-50 flex items-center text-sm border-b-2 border-primary-600">
+                  <Link to="/" className="text-gray-700 hover:text-primary-600 font-semibold transition-all duration-300 py-2 px-3 rounded-lg hover:bg-primary-50 flex items-center text-sm border-b-2 border-primary-600 whitespace-nowrap">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                     </svg>
-                    首页
+                    Home
                   </Link>
                 </li>
               </ul>
@@ -250,13 +280,13 @@ function App() {
         {/* 页脚 - 渐变背景 */}
         <footer className="bg-gradient-to-br from-gray-800 via-gray-900 to-gray-800 text-white py-8 mt-auto">
           <div className="container mx-auto px-4 text-center">
-            <p className="text-gray-200 mb-3 font-medium">&copy; 2024 Paparazzi News - 新闻真实性协作判断平台</p>
-            <p className="text-sm text-gray-400 mb-4">通过群体智慧识别假新闻，共建可信信息环境</p>
+            <p className="text-gray-200 mb-3 font-medium">&copy; 2024 Paparazzi News - Collaborative News Verification Platform</p>
+            <p className="text-sm text-gray-400 mb-4">Using collective intelligence to identify fake news and build a trustworthy information environment</p>
             <div className="flex justify-center items-center space-x-4 text-gray-400">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 hover:text-primary-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span className="text-xs">透明 · 协作 · 可信</span>
+              <span className="text-xs">Transparent · Collaborative · Trusted</span>
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 hover:text-primary-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>

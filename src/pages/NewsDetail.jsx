@@ -20,14 +20,14 @@ const NewsDetail = ({ getNewsById }) => {
       try {
         const newsData = getNewsById(id)
         if (newsData) {
-          setNews(newsData)
-        } else {
-          setError('新闻不存在')
-        }
-      } catch (err) {
-        setError('加载新闻失败')
-        console.error('加载新闻详情失败:', err)
-      } finally {
+    setNews(newsData)
+  } else {
+    setError('News not found')
+  }
+} catch (err) {
+  setError('Failed to load news')
+  console.error('Failed to load news details:', err)
+} finally {
         setLoading(false)
       }
     }
@@ -113,7 +113,7 @@ const NewsDetail = ({ getNewsById }) => {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mb-4"></div>
-        <p className="text-lg text-gray-600">正在加载新闻详情...</p>
+        <p className="text-lg text-gray-600">Loading news details...</p>
       </div>
     )
   }
@@ -135,12 +135,12 @@ const NewsDetail = ({ getNewsById }) => {
             d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
           />
         </svg>
-        <p className="text-red-600 text-lg mb-6">{error || '新闻不存在'}</p>
+        <p className="text-red-600 text-lg mb-6">{error || 'News not found'}</p>
         <button
-          className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="px-6 py-2 bg-gradient-primary text-white rounded-xl hover:shadow-lg hover:shadow-primary-500/50 transition-all duration-300 font-semibold"
           onClick={() => navigate('/')}
         >
-          返回首页
+          Back to Home
         </button>
       </div>
     )
@@ -151,34 +151,34 @@ const NewsDetail = ({ getNewsById }) => {
   const notFakePercentage = calculatePercentage(news.votes.notFake, totalVotes)
 
   return (
-    <div className="news-detail max-w-4xl mx-auto p-3 sm:p-4 md:p-6 min-h-screen flex flex-col bg-white rounded-xl shadow-md">
+    <div className="news-detail max-w-4xl mx-auto p-4 sm:p-6 md:p-8 min-h-screen flex flex-col glass rounded-2xl border border-white/30 shadow-glass-lg">
       {/* 返回按钮 */}
       <button 
         onClick={() => navigate(-1)} 
-        className="flex items-center px-3 sm:px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md mb-4 sm:mb-6 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
+        className="flex items-center px-4 py-2.5 glass hover:bg-white/80 rounded-xl mb-6 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 text-gray-700 font-medium hover:scale-105"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 sm:h-5 w-4 sm:w-5 mr-1 sm:mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
         </svg>
-        返回上一页
+        Back
       </button>
 
       {/* 新闻标题 */}
-      <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4 text-gray-800">{news.title}</h1>
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-5 bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">{news.title}</h1>
 
       {/* 元信息 */}
       <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-sm sm:text-base text-gray-500 mb-4 sm:mb-6">
-        <span>记者: {news.reporter}</span>
-        <span>发布时间: {formatDateTime(news.publishTime)}</span>
+        <span className="whitespace-nowrap">Reporter: {news.reporter}</span>
+        <span className="whitespace-nowrap">Published: {formatDateTime(news.publishTime)}</span>
       </div>
 
       {/* 新闻图片 */}
-      <div className="mb-6 sm:mb-8">
+      <div className="mb-6 sm:mb-8 rounded-2xl overflow-hidden shadow-glass-lg border border-white/30">
         <img 
           src={news.imageUrl} 
           alt={news.title} 
-          className="w-full h-auto rounded-lg shadow-md"
-          style={{ maxHeight: '400px' }}
+          className="w-full h-auto object-cover transition-transform duration-500 hover:scale-105"
+          style={{ maxHeight: '450px' }}
         />
       </div>
 
@@ -188,18 +188,21 @@ const NewsDetail = ({ getNewsById }) => {
       </div>
 
       {/* 投票统计 */}
-      <div className="bg-gray-50 p-4 sm:p-6 rounded-lg mb-6 sm:mb-8">
-        <h2 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-gray-800">真实性投票结果</h2>
-        <div className="space-y-4">
+      <div className="glass p-6 sm:p-8 rounded-2xl mb-6 sm:mb-8 border border-white/30">
+        <h2 className="text-xl sm:text-2xl font-bold mb-5 sm:mb-6 text-gray-800">Credibility Voting Results</h2>
+        <div className="space-y-5">
           {/* 虚假统计 */}
           <div>
-            <div className="flex justify-between mb-1">
-              <span className="font-medium text-red-600">疑似虚假</span>
-              <span className="text-gray-600">{news.votes.fake} 票 ({fakePercentage}%)</span>
+            <div className="flex justify-between mb-2 items-center">
+              <span className="font-semibold text-red-600 flex items-center whitespace-nowrap">
+                <span className="w-3 h-3 rounded-full bg-gradient-fake mr-2"></span>
+                Fake
+              </span>
+              <span className="text-gray-600 font-medium whitespace-nowrap">{news.votes.fake} votes ({fakePercentage}%)</span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2.5">
+            <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden shadow-inner">
               <div 
-                className="bg-red-600 h-2.5 rounded-full" 
+                className="bg-gradient-fake h-3 rounded-full transition-all duration-700 ease-out shadow-sm"
                 style={{ width: `${fakePercentage}%` }}
               ></div>
             </div>
@@ -207,28 +210,31 @@ const NewsDetail = ({ getNewsById }) => {
           
           {/* 真实统计 */}
           <div>
-            <div className="flex justify-between mb-1">
-              <span className="font-medium text-green-600">真实可信</span>
-              <span className="text-gray-600">{news.votes.notFake} 票 ({notFakePercentage}%)</span>
+            <div className="flex justify-between mb-2 items-center">
+              <span className="font-semibold text-green-600 flex items-center whitespace-nowrap">
+                <span className="w-3 h-3 rounded-full bg-gradient-true mr-2"></span>
+                True
+              </span>
+              <span className="text-gray-600 font-medium whitespace-nowrap">{news.votes.notFake} votes ({notFakePercentage}%)</span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2.5">
+            <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden shadow-inner">
               <div 
-                className="bg-green-600 h-2.5 rounded-full" 
+                className="bg-gradient-true h-3 rounded-full transition-all duration-700 ease-out shadow-sm"
                 style={{ width: `${notFakePercentage}%` }}
               ></div>
             </div>
           </div>
         </div>
         
-        <div className="flex justify-center mt-5 sm:mt-6">
+        <div className="flex justify-center mt-7">
           <button 
             onClick={() => navigate(`/news/${id}/vote`)} 
-            className="bg-blue-600 text-white py-2 px-5 sm:px-6 rounded-md hover:bg-blue-700 transition-colors font-medium flex items-center text-sm sm:text-base"
+            className="bg-gradient-primary text-white py-3 px-7 rounded-xl hover:shadow-lg hover:shadow-primary-500/50 transition-all duration-300 font-semibold flex items-center text-sm sm:text-base shadow-md hover:scale-105"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 sm:h-5 w-4 sm:w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
             </svg>
-            参与投票，表达您的观点
+            Vote and Share Your Opinion
           </button>
         </div>
       </div>
@@ -239,20 +245,20 @@ const NewsDetail = ({ getNewsById }) => {
           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 sm:h-5 w-4 sm:w-5 mr-1 sm:mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
           </svg>
-          社区评论 ({news.comments.length})
+          Community Comments ({news.comments.length})
         </h2>
         
         {/* 评论表单 */}
-        <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md mb-6 sm:mb-8 border border-gray-100" ref={commentFormRef}>
+        <div className="glass p-5 sm:p-7 rounded-2xl mb-6 sm:mb-8 border border-white/30 shadow-glass" ref={commentFormRef}>
           {showSuccess && (
             <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-md flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
               </svg>
-              评论发布成功！
+              Comment published successfully!
             </div>
           )}
-          <h3 className="text-base sm:text-lg font-medium mb-3 sm:mb-4 text-gray-800">发表您的评论</h3>
+          <h3 className="text-base sm:text-lg font-medium mb-3 sm:mb-4 text-gray-800">Share Your Comment</h3>
           <form onSubmit={handleCommentSubmit} className="space-y-3 sm:space-y-4">
             {/* 评论类型选择 */}
             <div className="flex space-x-6 bg-gray-50 p-3 rounded-md">
@@ -265,7 +271,7 @@ const NewsDetail = ({ getNewsById }) => {
                   onChange={(e) => setCommentVoteType(e.target.value)}
                   className="mr-2 h-4 w-4 text-red-600"
                 />
-                <span className={`text-sm font-medium ${commentVoteType === 'fake' ? 'text-red-600' : 'text-gray-600'}`}>我认为是假新闻</span>
+                <span className={`text-sm font-medium whitespace-nowrap ${commentVoteType === 'fake' ? 'text-red-600' : 'text-gray-600'}`}>I believe it's fake</span>
               </label>
               <label className="flex items-center cursor-pointer">
                 <input
@@ -276,7 +282,7 @@ const NewsDetail = ({ getNewsById }) => {
                   onChange={(e) => setCommentVoteType(e.target.value)}
                   className="mr-2 h-4 w-4 text-green-600"
                 />
-                <span className={`text-sm font-medium ${commentVoteType === 'notFake' ? 'text-green-600' : 'text-gray-600'}`}>我认为是真新闻</span>
+                <span className={`text-sm font-medium whitespace-nowrap ${commentVoteType === 'notFake' ? 'text-green-600' : 'text-gray-600'}`}>I believe it's true</span>
               </label>
             </div>
             
@@ -285,9 +291,9 @@ const NewsDetail = ({ getNewsById }) => {
               <textarea
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
-                placeholder="分享您对这则新闻的看法和分析..."
+                placeholder="Share your thoughts and analysis on this news..."
                 rows={4}
-                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                className="w-full px-4 py-3 bg-white/50 backdrop-blur-sm border border-white/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-400 resize-none transition-all duration-300"
               ></textarea>
             </div>
             
@@ -303,14 +309,14 @@ const NewsDetail = ({ getNewsById }) => {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    发布中...
+                    Posting...
                   </>
                 ) : (
                   <>
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                     </svg>
-                    发布评论
+                    Post Comment
                   </>
                 )}
               </button>
@@ -329,25 +335,29 @@ const NewsDetail = ({ getNewsById }) => {
             </div>
           )}
           {news.comments.length === 0 ? (
-            <p className="text-gray-500 text-center py-5 sm:py-6 text-sm sm:text-base">暂无评论，快来发表第一条评论吧！</p>
+            <p className="text-gray-500 text-center py-5 sm:py-6 text-sm sm:text-base">No comments yet. Be the first to comment!</p>
           ) : (
             news.comments.map((comment, index) => (
-              <div key={comment.id} className="bg-white p-3 sm:p-4 rounded-lg shadow-sm">
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-2">
+              <div key={comment.id} className="glass p-4 sm:p-5 rounded-xl shadow-sm border border-white/20 hover:border-white/40 transition-all duration-300">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3">
                     <div className="flex items-center">
-                      <div className="w-6 sm:w-8 h-6 sm:h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 mr-2 sm:mr-3">
-                        <span className="text-xs sm:text-sm">{comment.userId.charAt(0).toUpperCase()}</span>
+                      <div className="w-10 h-10 bg-gradient-primary rounded-full flex items-center justify-center text-white font-bold mr-3 shadow-md">
+                        <span className="text-sm">{comment.userId.charAt(0).toUpperCase()}</span>
                       </div>
                       <div>
-                        <div className="font-medium text-gray-800 text-sm">用户 {comment.userId}</div>
-                        <div className="text-xs sm:text-sm text-gray-500">{formatDateTime(comment.timestamp)}</div>
+                        <div className="font-semibold text-gray-800 text-sm whitespace-nowrap">User {comment.userId}</div>
+                        <div className="text-xs text-gray-500">{formatDateTime(comment.timestamp)}</div>
                       </div>
                     </div>
-                  <span className={`px-2 py-1 rounded text-xs font-medium ${comment.voteType === 'fake' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}>
-                    {comment.voteType === 'fake' ? '假新闻' : '真新闻'}
+                  <span className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap ${
+                    comment.voteType === 'fake' 
+                      ? 'bg-gradient-fake text-white shadow-lg shadow-fake-600/30' 
+                      : 'bg-gradient-true text-white shadow-lg shadow-true-500/30'
+                  }`}>
+                    {comment.voteType === 'fake' ? 'Fake' : 'True'}
                   </span>
                 </div>
-                <p className="text-sm text-gray-700">{comment.content}</p>
+                <p className="text-sm text-gray-700 leading-relaxed">{comment.content}</p>
               </div>
             ))
           )}
