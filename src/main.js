@@ -15,8 +15,8 @@ const mockNewsData = [
     trustScore: 95,
     date: "2024-03-15",
     category: "Education",
-    imageUrl: "https://picsum.photos/seed/news1/600/400",
-    content: "<p>In today's digital age, we are constantly bombarded with information from various sources. This information overload makes it increasingly difficult to distinguish between reliable news and misleading rumors.</p><p>Communication experts suggest several key strategies to identify fake news:</p><ol><li>Check the source of the information</li><li>Look for corroboration from multiple trusted sources</li><li>Examine the evidence presented</li><li>Be skeptical of sensational headlines</li><li>Consider the author's credentials</li></ol><p>By applying these critical thinking skills, readers can better navigate the complex information landscape and make more informed decisions.</p>"
+    imageUrl: "https://picsum.photos/seed/news-education-1/600/400",
+    content: "<p>In today's digital age, we are constantly bombarded with information from various sources...</p>"
   },
   {
     id: 2,
@@ -27,8 +27,8 @@ const mockNewsData = [
     trustScore: 20,
     date: "2024-03-14",
     category: "Entertainment",
-    imageUrl: "https://picsum.photos/seed/news2/600/400",
-    content: "<p>Social media platforms have been abuzz with rumors about a popular celebrity's alleged arrest. Despite the lack of official confirmation, these rumors have spread rapidly, causing significant controversy.</p><p>Experts warn that such unsubstantiated claims can have serious consequences for individuals' reputations and mental health. They emphasize the importance of verifying information before sharing it online.</p>"
+    imageUrl: "https://picsum.photos/seed/news-entertainment-1/600/400",
+    content: "<p>Social media platforms have been abuzz with rumors about a popular celebrity's alleged arrest...</p>"
   },
   {
     id: 3,
@@ -39,8 +39,8 @@ const mockNewsData = [
     trustScore: 88,
     date: "2024-03-14",
     category: "Health",
-    imageUrl: "https://picsum.photos/seed/news3/600/400",
-    content: "<p>For decades, the '8x8 rule' (eight 8-ounce glasses of water per day) has been widely accepted as a health guideline. However, recent scientific studies suggest that this one-size-fits-all approach may not be optimal for everyone.</p><p>Dr. Sarah Johnson, lead researcher at the National Institute of Nutrition, explains: 'Water requirements vary significantly based on factors such as body weight, activity level, climate, and overall health. What's most important is to listen to your body's thirst signals.'</p><p>The study recommends that healthy adults generally consume between 2-3 liters of water daily, but this should be adjusted based on individual circumstances.</p>"
+    imageUrl: "https://picsum.photos/seed/news-health-1/600/400",
+    content: "<p>For decades, the '8x8 rule' has been widely accepted...</p>"
   },
   {
     id: 4,
@@ -51,8 +51,8 @@ const mockNewsData = [
     trustScore: 65,
     date: "2024-03-13",
     category: "Technology",
-    imageUrl: "https://picsum.photos/seed/news4/600/400",
-    content: "<p>Industry insiders have revealed that a leading technology company is on the verge of unveiling a breakthrough in battery charging technology. The new system reportedly allows devices to reach full charge in just minutes rather than hours.</p><p>While the company has not officially confirmed these reports, early prototypes suggest potential applications for smartphones, electric vehicles, and other battery-powered devices.</p><p>However, some experts have raised questions about the long-term impact on battery lifespan and safety considerations.</p>"
+    imageUrl: "https://picsum.photos/seed/news-tech-1/600/400",
+    content: "<p>Industry insiders have revealed that a leading technology company...</p>"
   },
   {
     id: 5,
@@ -63,8 +63,8 @@ const mockNewsData = [
     trustScore: 92,
     date: "2024-03-13",
     category: "Environment",
-    imageUrl: "https://picsum.photos/seed/news5/600/400",
-    content: "<p>The Ocean Conservation Alliance has published its 2024 report on marine pollution, painting a concerning picture of the world's oceans. Despite increased public awareness and policy initiatives, plastic pollution levels continue to rise at an alarming rate.</p><p>The report estimates that over 11 million metric tons of plastic waste enter the oceans each year. This pollution not only threatens marine life but also has implications for human health as microplastics enter the food chain.</p><p>The organization is calling for stronger international regulations, improved waste management infrastructure, and increased investment in sustainable alternatives to single-use plastics.</p>"
+    imageUrl: "https://picsum.photos/seed/news-env-1/600/400",
+    content: "<p>The Ocean Conservation Alliance has published its 2024 report on marine pollution...</p>"
   },
   {
     id: 6,
@@ -75,8 +75,8 @@ const mockNewsData = [
     trustScore: 60,
     date: "2024-03-12",
     category: "Finance",
-    imageUrl: "https://picsum.photos/seed/news6/600/400",
-    content: "<p>A panel of real estate economists has released a forecast predicting a notable correction in housing markets across the country. Factors cited include rising interest rates, stricter lending standards, and increased housing supply.</p><p>While some markets may experience more significant declines than others, the consensus suggests a national average decrease of 10-15% in home values over the coming year.</p><p>Prospective homebuyers are advised to exercise caution and conduct thorough research before making major financial decisions in this uncertain market.</p>"
+    imageUrl: "https://picsum.photos/seed/news-finance-1/600/400",
+    content: "<p>A panel of real estate economists has released a forecast predicting a notable correction...</p>"
   },
   {
     id: 7,
@@ -87,7 +87,8 @@ const mockNewsData = [
     trustScore: 90,
     date: "2024-03-12",
     category: "Economy",
-    imageUrl: "https://picsum.photos/seed/news7/600/400"
+    imageUrl: "https://picsum.photos/seed/news-economy-1/600/400",
+    content: "<p>The new package includes tax reductions and financial incentives...</p>"
   },
   {
     id: 8,
@@ -98,9 +99,85 @@ const mockNewsData = [
     trustScore: 93,
     date: "2024-03-11",
     category: "Technology",
-    imageUrl: "https://picsum.photos/seed/news8/600/400"
+    imageUrl: "https://picsum.photos/seed/news-energy-1/600/400",
+    content: "<p>Scientists at the National Energy Institute announced a major breakthrough...</p>"
+  },
+  {
+    id: 9,
+    title: "Rising Urban Inequality: Experts Call for Stronger Social Safety Nets",
+    summary: "Sociologists warn about the growing income gap in major cities and urge new welfare reforms to protect vulnerable populations.",
+    source: "The China Observer",
+    trustLevel: "medium",
+    trustScore: 85,
+    date: "2024-05-02",
+    category: "Society",
+    imageUrl: "https://picsum.photos/seed/news-society-1/600/400",
+    content: "<p>Recent data shows that urban income inequality continues to widen...</p>"
+  },
+  {
+    id: 10,
+    title: "China’s Green Future: Nationwide Tree Planting Campaign Launched",
+    summary: "A new national campaign aims to plant 10 billion trees by 2030 to combat desertification and help achieve carbon neutrality goals.",
+    source: "Global Environmental Times",
+    trustLevel: "high",
+    trustScore: 97,
+    date: "2024-06-18",
+    category: "Environment",
+    imageUrl: "https://picsum.photos/seed/news-green-1/600/400",
+    content: "<p>The Ministry of Ecology launched the ‘Green Future 2030’ campaign...</p>"
+  },
+  {
+    id: 11,
+    title: "Pop Idol’s Surprise Charity Concert Raises Millions for Disaster Relief",
+    summary: "Pop star Li Xuan held a surprise charity concert in Shanghai, raising over 10 million yuan for earthquake victims.",
+    source: "Entertainment Weekly CN",
+    trustLevel: "medium",
+    trustScore: 88,
+    date: "2024-07-21",
+    category: "Entertainment",
+    imageUrl: "https://picsum.photos/seed/news-entertainment-2/600/400",
+    content: "<p>Fans were amazed as Li Xuan appeared for an unannounced charity concert...</p>"
+  },
+  {
+    id: 12,
+    title: "Government Unveils Plan for Digital Governance Reform",
+    summary: "A new digital governance initiative aims to improve transparency, streamline public services, and enhance citizen participation through advanced technology.",
+    source: "Xinhua News Agency",
+    trustLevel: "high",
+    trustScore: 93,
+    date: "2024-09-10",
+    category: "Politics",
+    imageUrl: "https://picsum.photos/seed/politics1/600/400",
+    content: `
+    <p>The State Council announced the launch of a nationwide digital governance reform plan aimed at modernizing public administration. 
+    The plan includes building unified data platforms, introducing AI-assisted decision-making tools, and promoting open-data systems.</p>
+    <p>According to official statements, the initiative is designed to reduce bureaucratic inefficiency, increase public service accessibility, 
+    and allow citizens to monitor government activities in real time through transparent dashboards.</p>
+    <p>Experts believe this reform could make China a global leader in smart governance and public data infrastructure.</p>
+  `
+  },
+  {
+    id: 13,
+    title: "Local Elections Highlight Push for Grassroots Participation",
+    summary: "Recent local elections across multiple provinces have seen a record-high voter turnout, signaling growing public engagement in local governance.",
+    source: "People's Daily",
+    trustLevel: "high",
+    trustScore: 91,
+    date: "2024-10-03",
+    category: "Politics",
+    imageUrl: "https://picsum.photos/seed/politics2/600/400",
+    content: `
+    <p>Across several provinces, local elections concluded with voter participation exceeding 85%, a significant increase compared to previous years. 
+    Analysts attribute this rise to new civic education campaigns and expanded digital voting tools.</p>
+    <p>Officials report that the new system allows residents to track election results instantly and provides a platform for candidates to share policy proposals transparently.</p>
+    <p>‘The enthusiasm of the public demonstrates the vitality of grassroots democracy and the effectiveness of modernization efforts in local governance,’ said Professor Liu Ming of the National Political Academy.</p>
+  `
   }
+
 ];
+
+export default mockNewsData;
+
 
 // Mock 评论数据
 const mockComments = {
