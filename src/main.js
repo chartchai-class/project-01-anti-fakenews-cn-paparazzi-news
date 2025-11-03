@@ -173,7 +173,6 @@ const mockNewsData = [
     <p>‘The enthusiasm of the public demonstrates the vitality of grassroots democracy and the effectiveness of modernization efforts in local governance,’ said Professor Liu Ming of the National Political Academy.</p>
   `
   }
-
 ];
 
 export default mockNewsData;
