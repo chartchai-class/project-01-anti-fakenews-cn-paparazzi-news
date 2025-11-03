@@ -1073,6 +1073,86 @@ h4 {
   border-color: var(--trust-low);
 }
 
+/* 投票组件样式 */
+.vote-bar {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.vote-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.vote-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-md) var(--spacing-sm);
+  min-height: 80px;
+  width: calc(33.333% - 13.333px);
+  min-width: 120px;
+  border-radius: var(--border-radius);
+  border: 2px solid var(--border-color);
+  background-color: var(--white);
+  transition: all var(--transition-base);
+}
+
+.vote-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.vote-button.voted {
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 3px rgba(255, 212, 59, 0.1);
+}
+
+.vote-icon {
+  font-size: 1.5rem;
+  margin-bottom: var(--spacing-xs);
+}
+
+.vote-label {
+  font-weight: 500;
+  margin-bottom: var(--spacing-xs);
+}
+
+.vote-count {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.vote-percentage {
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: var(--border-radius);
+  padding: 2px 8px;
+  margin-top: var(--spacing-xs);
+}
+
+.vote-button.trustworthy .vote-percentage {
+  background-color: rgba(59, 174, 73, 0.1);
+  color: var(--trust-high);
+}
+
+.vote-button.not-sure .vote-percentage {
+  background-color: rgba(217, 119, 6, 0.1);
+  color: var(--trust-medium);
+}
+
+.vote-button.not-trustworthy .vote-percentage {
+  background-color: rgba(229, 62, 62, 0.1);
+  color: var(--trust-low);
+}
+
 /* 媒体素养页面样式 */
 .education-section {
   padding: var(--spacing-2xl) 0;
@@ -1208,12 +1288,16 @@ h4 {
 
 .comment-form-textarea {
   width: 100%;
-  padding: var(--spacing-md);
+  min-height: 120px;
+  padding: var(--spacing-lg);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
   resize: vertical;
-  transition: border-color var(--transition-base);
+  transition: all var(--transition-base);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .comment-form-textarea:focus {

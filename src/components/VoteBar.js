@@ -29,16 +29,19 @@ export function renderVoteBar(voteData = {}) {
           <span class="vote-icon">👍</span>
           <span class="vote-label">Trustworthy</span>
           <span class="vote-count">${trustworthy}</span>
+          <span class="vote-percentage">${trustworthyPercent}%</span>
         </button>
         <button class="vote-button not-sure" data-vote="notSure">
           <span class="vote-icon">🤔</span>
           <span class="vote-label">Not Sure</span>
           <span class="vote-count">${notSure}</span>
+          <span class="vote-percentage">${notSurePercent}%</span>
         </button>
         <button class="vote-button not-trustworthy" data-vote="notTrustworthy">
           <span class="vote-icon">👎</span>
           <span class="vote-label">Not Trustworthy</span>
           <span class="vote-count">${notTrustworthy}</span>
+          <span class="vote-percentage">${notTrustworthyPercent}%</span>
         </button>
       </div>
       
@@ -59,20 +62,6 @@ export function renderVoteBar(voteData = {}) {
             style="width: ${notTrustworthyPercent}%"
             title="${notTrustworthyPercent}% Not Trustworthy"
           ></div>
-        </div>
-        <div class="vote-percentages">
-          <div class="vote-percentage trustworthy">
-            <span class="vote-color" style="background-color: var(--trust-high);"></span>
-            <span>${trustworthyPercent}%</span>
-          </div>
-          <div class="vote-percentage not-sure">
-            <span class="vote-color" style="background-color: var(--trust-medium);"></span>
-            <span>${notSurePercent}%</span>
-          </div>
-          <div class="vote-percentage not-trustworthy">
-            <span class="vote-color" style="background-color: var(--trust-low);"></span>
-            <span>${notTrustworthyPercent}%</span>
-          </div>
         </div>
       </div>
       
@@ -176,9 +165,9 @@ export function initVoteBar(onVote) {
       document.querySelector('.vote-progress.not-sure').style.width = `${notSurePercent}%`;
       document.querySelector('.vote-progress.not-trustworthy').style.width = `${notTrustworthyPercent}%`;
       
-      document.querySelector('.vote-percentage.trustworthy span:last-child').textContent = `${trustworthyPercent}%`;
-      document.querySelector('.vote-percentage.not-sure span:last-child').textContent = `${notSurePercent}%`;
-      document.querySelector('.vote-percentage.not-trustworthy span:last-child').textContent = `${notTrustworthyPercent}%`;
+      document.querySelector('.vote-button.trustworthy .vote-percentage').textContent = `${trustworthyPercent}%`;
+      document.querySelector('.vote-button.not-sure .vote-percentage').textContent = `${notSurePercent}%`;
+      document.querySelector('.vote-button.not-trustworthy .vote-percentage').textContent = `${notTrustworthyPercent}%`;
       
       document.querySelector('.vote-count').textContent = `${totalVotes} votes`;
     }
