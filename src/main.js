@@ -3,6 +3,8 @@ import './style.css';
 import { renderHomePage, initHomePage } from './pages/HomePage.js';
 import { renderCategoryPage, initCategoryPage } from './pages/CategoryPage.js';
 import { renderNewsDetailPage, initNewsDetailPage } from './pages/NewsDetailPage.js';
+// 导入API服务
+import apiService from './api/apiService.js';
 
 // Mock 数据
 const mockNewsData = [
@@ -282,32 +284,32 @@ class Router {
   }
 
   // 导航到路由
-  navigate(path) {
+  async navigate(path) {
     const { callback, params } = this.matchRoute(path);
     this.currentRoute = path;
     
     // 更新URL，但不刷新页面
     history.pushState({ path }, '', '#');
     
-    // 执行回调
-    callback(params);
+    // 执行回调，支持异步回调函数
+    await callback(params);
   }
 
   // 初始化路由系统
-  init() {
+  async init() {
     // 监听popstate事件
-    window.addEventListener('popstate', (e) => {
+    window.addEventListener('popstate', async (e) => {
       const path = e.state?.path || '';
       const { callback, params } = this.matchRoute(path);
       this.currentRoute = path;
-      callback(params);
+      await callback(params);
     });
     
     // 初始化时加载当前路由
     const hash = window.location.hash.slice(1) || '';
     const { callback, params } = this.matchRoute(hash);
     this.currentRoute = hash;
-    callback(params);
+    await callback(params);
   }
 }
 
@@ -315,55 +317,63 @@ class Router {
 const router = new Router();
 
 // 渲染首页
-function handleHomePage() {
+async function handleHomePage() {
   const app = document.querySelector('#app');
-  app.innerHTML = renderHomePage(mockNewsData);
   
-  initHomePage({
-    onCategoryChange: (category, categoryLower) => {
-      if (categoryLower === 'all') {
-        router.navigate('');
-      } else {
-        router.navigate(`/category/${categoryLower}`);
-      }
-    },
-    onNewsClick: (newsId) => {
-      router.navigate(`/news/${newsId}`);
-    },
-    onLoadMore: async () => {
-      // 模拟加载更多数据
-      return new Promise(resolve => {
-        setTimeout(() => {
-          const newsGrid = document.getElementById('news-grid');
-          // 复制现有新闻并修改ID来模拟新数据
-          const newNews = mockNewsData.slice(0, 2).map((item, index) => ({
-            ...item,
-            id: item.id + 100 + index,
-            title: `${item.title} (More)`
-          }));
+  try {
+    // 显示加载状态
+    app.innerHTML = '<div class="loading">Loading news...</div>';
+    
+    // 从API获取新闻数据
+    const response = await apiService.news.getNews();
+    const newsData = response.data || [];
+    
+    // 渲染页面
+    app.innerHTML = renderHomePage(newsData);
+    
+    initHomePage({
+      onCategoryChange: (category, categoryLower) => {
+        if (categoryLower === 'all') {
+          router.navigate('');
+        } else {
+          router.navigate(`/category/${categoryLower}`);
+        }
+      },
+      onNewsClick: (newsId) => {
+        router.navigate(`/news/${newsId}`);
+      },
+      onLoadMore: async () => {
+        try {
+          // 从API加载更多数据（这里假设API支持分页）
+          const currentPage = 2; // 简化处理，实际应从当前状态获取
+          const moreResponse = await apiService.news.getNews({ page: currentPage });
+          const moreNews = moreResponse.data || [];
           
-          newNews.forEach(news => {
+          const newsGrid = document.getElementById('news-grid');
+          
+          moreNews.forEach(news => {
             const newsCard = document.createElement('div');
             newsCard.innerHTML = `
-              <article class="news-card" data-news-id="${news.id}">
+              <article class="news-card" data-news-id="${news.id || Math.random()}">
                 <div class="news-image">
-                  <img src="${news.imageUrl}" alt="${news.title}">
+                  <img src="${news.imageUrl || 'https://picsum.photos/seed/news-default/600/400'}" alt="${news.title}">
                 </div>
                 <div class="news-content">
                   <div class="news-meta">
-                    <span class="news-source">${news.source}</span>
-                    <span class="news-date">${news.date}</span>
-                    <span class="news-category tag-badge">${news.category}</span>
+                    <span class="news-source">${news.source || 'Unknown Source'}</span>
+                    <span class="news-date">${news.date || new Date().toISOString().split('T')[0]}</span>
+                    <span class="news-category tag-badge">${news.category || 'General'}</span>
                   </div>
                   <h3 class="news-title">${news.title}</h3>
                   <p class="news-summary">${news.summary}</p>
-                  <div class="trust-badge" style="--trust-color: var(--trust-high);">
+                  <div class="trust-badge" style="--trust-color: var(--trust-${news.trustLevel || 'medium'});">
                     <div class="trust-bar">
-                      <div class="trust-progress" style="width: ${news.trustScore}%"></div>
+                      <div class="trust-progress" style="width: ${news.trustScore || 50}%">
+</div>
                     </div>
                     <div class="trust-info">
-                      <span class="trust-score">${news.trustScore}%</span>
-                      <span class="trust-label">Highly Trustworthy</span>
+                      <span class="trust-score">${news.trustScore || 50}%</span>
+                      <span class="trust-label">${news.trustLevel === 'high' ? 'Highly Trustworthy' : news.trustLevel === 'low' ? 'Not Trustworthy' : 'Neutral'}</span>
                     </div>
                   </div>
                   <button class="news-read-more">Read More</button>
@@ -372,71 +382,88 @@ function handleHomePage() {
             `;
             newsGrid.appendChild(newsCard.firstElementChild);
           });
-          resolve();
-        }, 1000);
-      });
-    }
-  });
+          
+          return true;
+        } catch (error) {
+          console.error('Failed to load more news:', error);
+          alert('Failed to load more news. Please try again.');
+          return false;
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Failed to load news:', error);
+    app.innerHTML = '<div class="error">Failed to load news. Please try again later.</div>';
+  }
+}
 }
 
 // 渲染分类页面
-function handleCategoryPage(params) {
+async function handleCategoryPage(params) {
   const { category } = params;
   const normalizedCategory = category.charAt(0).toUpperCase() + category.slice(1);
   
-  // 过滤新闻数据
-  const filteredNews = mockNewsData.filter(
-    news => news.category.toLowerCase() === category.toLowerCase() || category.toLowerCase() === 'all'
-  );
-  
   const app = document.querySelector('#app');
-  app.innerHTML = renderCategoryPage(normalizedCategory, filteredNews);
   
-  initCategoryPage({
-    onCategoryChange: (newCategory, newCategoryLower) => {
-      if (newCategoryLower === 'all') {
-        router.navigate('');
-      } else {
-        router.navigate(`/category/${newCategoryLower}`);
-      }
-    },
-    onNewsClick: (newsId) => {
-      router.navigate(`/news/${newsId}`);
-    },
-    onLoadMore: async () => {
-      // 模拟加载更多数据
-      return new Promise(resolve => {
-        setTimeout(() => {
-          const newsGrid = document.getElementById('category-news-grid');
-          // 复制现有新闻并修改ID来模拟新数据
-          const newNews = filteredNews.slice(0, 2).map((item, index) => ({
-            ...item,
-            id: item.id + 200 + index,
-            title: `${item.title} (More)`
-          }));
+  try {
+    // 显示加载状态
+    app.innerHTML = `<div class="loading">Loading ${normalizedCategory} news...</div>`;
+    
+    // 从API获取分类新闻
+    const params = category.toLowerCase() === 'all' ? {} : { category: category.toLowerCase() };
+    const response = await apiService.news.getNews(params);
+    const filteredNews = response.data || [];
+    
+    // 渲染页面
+    app.innerHTML = renderCategoryPage(normalizedCategory, filteredNews);
+    
+    initCategoryPage({
+      onCategoryChange: (newCategory, newCategoryLower) => {
+        if (newCategoryLower === 'all') {
+          router.navigate('');
+        } else {
+          router.navigate(`/category/${newCategoryLower}`);
+        }
+      },
+      onNewsClick: (newsId) => {
+        router.navigate(`/news/${newsId}`);
+      },
+      onLoadMore: async () => {
+        try {
+          // 从API加载更多分类数据
+          const currentPage = 2;
+          const moreParams = { 
+            page: currentPage,
+            ...(category.toLowerCase() === 'all' ? {} : { category: category.toLowerCase() })
+          };
+          const moreResponse = await apiService.news.getNews(moreParams);
+          const moreNews = moreResponse.data || [];
           
-          newNews.forEach(news => {
+          const newsGrid = document.getElementById('category-news-grid');
+          
+          moreNews.forEach(news => {
             const newsCard = document.createElement('div');
             newsCard.innerHTML = `
-              <article class="news-card" data-news-id="${news.id}">
+              <article class="news-card" data-news-id="${news.id || Math.random()}">
                 <div class="news-image">
-                  <img src="${news.imageUrl}" alt="${news.title}">
+                  <img src="${news.imageUrl || 'https://picsum.photos/seed/news-default/600/400'}" alt="${news.title}">
                 </div>
                 <div class="news-content">
                   <div class="news-meta">
-                    <span class="news-source">${news.source}</span>
-                    <span class="news-date">${news.date}</span>
-                    <span class="news-category tag-badge">${news.category}</span>
+                    <span class="news-source">${news.source || 'Unknown Source'}</span>
+                    <span class="news-date">${news.date || new Date().toISOString().split('T')[0]}</span>
+                    <span class="news-category tag-badge">${news.category || 'General'}</span>
                   </div>
                   <h3 class="news-title">${news.title}</h3>
                   <p class="news-summary">${news.summary}</p>
-                  <div class="trust-badge" style="--trust-color: var(--trust-high);">
+                  <div class="trust-badge" style="--trust-color: var(--trust-${news.trustLevel || 'medium'});">
                     <div class="trust-bar">
-                      <div class="trust-progress" style="width: ${news.trustScore}%"></div>
+                      <div class="trust-progress" style="width: ${news.trustScore || 50}%">
+</div>
                     </div>
                     <div class="trust-info">
-                      <span class="trust-score">${news.trustScore}%</span>
-                      <span class="trust-label">Highly Trustworthy</span>
+                      <span class="trust-score">${news.trustScore || 50}%</span>
+                      <span class="trust-label">${news.trustLevel === 'high' ? 'Highly Trustworthy' : news.trustLevel === 'low' ? 'Not Trustworthy' : 'Neutral'}</span>
                     </div>
                   </div>
                   <button class="news-read-more">Read More</button>
@@ -445,54 +472,139 @@ function handleCategoryPage(params) {
             `;
             newsGrid.appendChild(newsCard.firstElementChild);
           });
-          resolve();
-        }, 1000);
-      });
-    }
-  });
+          
+          return true;
+        } catch (error) {
+          console.error('Failed to load more news:', error);
+          alert('Failed to load more news. Please try again.');
+          return false;
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Failed to load category news:', error);
+    app.innerHTML = `<div class="error">Failed to load ${normalizedCategory} news. Please try again later.</div>`;
+  }
+}
 }
 
 // 渲染新闻详情页
-function handleNewsDetailPage(params) {
+async function handleNewsDetailPage(params) {
   const { id } = params;
-  const newsDetail = mockNewsData.find(news => news.id === parseInt(id));
-  const comments = mockComments[id] || [];
-  const voteData = mockVoteData[id] || { trustworthy: 0, notTrustworthy: 0, notSure: 0 };
-  
   const app = document.querySelector('#app');
-  app.innerHTML = renderNewsDetailPage(newsDetail, comments, voteData);
   
-  initNewsDetailPage({
-    onBack: () => {
-      history.back();
-    },
-    onVote: (voteType) => {
-      console.log(`User voted: ${voteType} for news ${id}`);
-      // 在实际应用中，这里应该发送API请求
-    },
-    onCommentSubmit: (commentData) => {
-      console.log('New comment submitted:', commentData);
-      // 在实际应用中，这里应该发送API请求
-      alert('Comment submitted successfully!');
-    },
-    onCommentLike: (commentId) => {
-      console.log(`Comment ${commentId} liked`);
-      // 在实际应用中，这里应该发送API请求
-    },
-    onCommentDislike: (commentId) => {
-      console.log(`Comment ${commentId} disliked`);
-      // 在实际应用中，这里应该发送API请求
-    },
-    onCommentReply: (commentId) => {
-      console.log(`Reply to comment ${commentId}`);
-      alert(`Reply to comment ${commentId}`);
-    },
-    onLoadMoreComments: async () => {
-      // 模拟加载更多评论
-      console.log('Loading more comments...');
-      alert('Loading more comments...');
-    }
-  });
+  try {
+    // 显示加载状态
+    app.innerHTML = '<div class="loading">Loading news details...</div>';
+    
+    // 并行获取新闻详情和评论
+    const [newsResponse, commentsResponse] = await Promise.all([
+      apiService.news.getNewsById(id),
+      apiService.news.getComments(id)
+    ]);
+    
+    const newsDetail = newsResponse.data || {};
+    const comments = commentsResponse.data || [];
+    // 从新闻数据中提取投票信息，如果没有则使用默认值
+    const voteData = newsDetail.votes || { trustworthy: 0, notTrustworthy: 0, notSure: 0 };
+    
+    // 渲染页面
+    app.innerHTML = renderNewsDetailPage(newsDetail, comments, voteData);
+    
+    initNewsDetailPage({
+      onBack: () => {
+        history.back();
+      },
+      onVote: async (voteType) => {
+        try {
+          await apiService.news.voteNews(id, voteType);
+          // 投票成功后刷新页面或更新UI
+          alert('Vote submitted successfully!');
+          // 重新加载页面以显示最新投票结果
+          handleNewsDetailPage(params);
+        } catch (error) {
+          console.error('Vote failed:', error);
+          alert('Failed to submit vote. Please try again.');
+        }
+      },
+      onCommentSubmit: async (commentData) => {
+        try {
+          await apiService.news.addComment(id, commentData.content);
+          alert('Comment submitted successfully!');
+          // 重新加载页面以显示最新评论
+          handleNewsDetailPage(params);
+        } catch (error) {
+          console.error('Comment submission failed:', error);
+          alert('Failed to submit comment. Please try again.');
+        }
+      },
+      onCommentLike: async (commentId) => {
+        try {
+          await apiService.comment.likeComment(commentId);
+          // 点赞成功后刷新评论区域
+          handleNewsDetailPage(params);
+        } catch (error) {
+          console.error('Comment like failed:', error);
+          alert('Failed to like comment. Please try again.');
+        }
+      },
+      onCommentDislike: async (commentId) => {
+        try {
+          await apiService.comment.dislikeComment(commentId);
+          // 点踩成功后刷新评论区域
+          handleNewsDetailPage(params);
+        } catch (error) {
+          console.error('Comment dislike failed:', error);
+          alert('Failed to dislike comment. Please try again.');
+        }
+      },
+      onCommentReply: (commentId) => {
+        // 在实际应用中，可以实现回复功能
+        alert(`Reply to comment ${commentId}`);
+      },
+      onLoadMoreComments: async () => {
+        try {
+          const currentPage = 2;
+          const moreCommentsResponse = await apiService.news.getComments(id, { page: currentPage });
+          const moreComments = moreCommentsResponse.data || [];
+          
+          if (moreComments.length > 0) {
+            // 添加更多评论到UI
+            const commentsSection = document.querySelector('.comments-container');
+            moreComments.forEach(comment => {
+              // 创建评论元素并添加到页面
+              const commentElement = document.createElement('div');
+              commentElement.className = 'comment-item';
+              commentElement.innerHTML = `
+                <div class="comment-header">
+                  <span class="comment-author">${comment.username || 'Anonymous'}</span>
+                  <span class="comment-date">${comment.createdAt || new Date().toISOString()}</span>
+                </div>
+                <div class="comment-content">${comment.content}</div>
+                <div class="comment-actions">
+                  <button class="like-btn" data-comment-id="${comment.id}">Like (${comment.likes || 0})</button>
+                  <button class="dislike-btn" data-comment-id="${comment.id}">Dislike (${comment.dislikes || 0})</button>
+                  <button class="reply-btn" data-comment-id="${comment.id}">Reply</button>
+                </div>
+              `;
+              commentsSection.appendChild(commentElement);
+            });
+            
+            return true;
+          }
+          return false; // 没有更多评论
+        } catch (error) {
+          console.error('Failed to load more comments:', error);
+          alert('Failed to load more comments. Please try again.');
+          return false;
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Failed to load news details:', error);
+    app.innerHTML = '<div class="error">Failed to load news details. Please try again later.</div>';
+  }
+}
 }
 
 // 设置路由
@@ -501,29 +613,62 @@ router.addRoute('/category/:category', handleCategoryPage);
 router.addRoute('/news/:id', handleNewsDetailPage);
 router.setDefault(handleHomePage);
 
+// 添加加载和错误状态的样式
+const style = document.createElement('style');
+style.textContent = `
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  font-size: 1.2rem;
+  color: #555;
+  font-weight: 500;
+}
+
+.error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  font-size: 1.2rem;
+  color: #e53935;
+  font-weight: 500;
+  padding: 2rem;
+  text-align: center;
+}
+`;
+document.head.appendChild(style);
+
 // 启动应用
-function initApp() {
-  // 初始化路由系统
-  router.init();
-  
-  // 监听所有<a>标签点击，拦截并使用路由系统
-  document.addEventListener('click', (e) => {
-    if (e.target.tagName === 'A' && e.target.getAttribute('href') && !e.target.getAttribute('target')) {
-      e.preventDefault();
-      const href = e.target.getAttribute('href');
-      
-      if (href === '#') {
-        router.navigate('');
-      } else if (href.startsWith('#')) {
-        // 处理锚点链接
-        const targetId = href.substring(1);
-        const targetElement = document.getElementById(targetId);
-        if (targetElement) {
-          targetElement.scrollIntoView({ behavior: 'smooth' });
+async function initApp() {
+  try {
+    // 初始化路由系统
+    await router.init();
+    
+    // 监听所有<a>标签点击，拦截并使用路由系统
+    document.addEventListener('click', async (e) => {
+      if (e.target.tagName === 'A' && e.target.getAttribute('href') && !e.target.getAttribute('target')) {
+        e.preventDefault();
+        const href = e.target.getAttribute('href');
+        
+        if (href === '#') {
+          await router.navigate('');
+        } else if (href.startsWith('#')) {
+          // 处理锚点链接
+          const targetId = href.substring(1);
+          const targetElement = document.getElementById(targetId);
+          if (targetElement) {
+            targetElement.scrollIntoView({ behavior: 'smooth' });
+          }
         }
       }
-    }
-  });
+    });
+  } catch (error) {
+    console.error('App initialization error:', error);
+    const app = document.querySelector('#app');
+    app.innerHTML = '<div class="error">Failed to initialize the application. Please refresh the page.</div>';
+  }
 }
 
 // 当DOM加载完成后启动应用
