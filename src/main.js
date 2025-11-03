@@ -248,7 +248,7 @@ function handleHomePage() {
       if (categoryLower === 'all') {
         router.navigate('');
       } else {
-        router.navigate(`/news/${categoryLower}`);
+        router.navigate(`/category/${categoryLower}`);
       }
     },
     onNewsClick: (newsId) => {
@@ -321,7 +321,7 @@ function handleCategoryPage(params) {
       if (newCategoryLower === 'all') {
         router.navigate('');
       } else {
-        router.navigate(`/news/${newCategoryLower}`);
+        router.navigate(`/category/${newCategoryLower}`);
       }
     },
     onNewsClick: (newsId) => {
@@ -421,7 +421,7 @@ function handleNewsDetailPage(params) {
 
 // 设置路由
 router.addRoute('', handleHomePage);
-router.addRoute('/news/:category', handleCategoryPage);
+router.addRoute('/category/:category', handleCategoryPage);
 router.addRoute('/news/:id', handleNewsDetailPage);
 router.setDefault(handleHomePage);
 
