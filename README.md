@@ -11,18 +11,17 @@ The project is deployed on Vercel. You can access it at:
 
 ### Member 1
 - **Name:** Shen Xinyan
-- **Responsibilities:** [Key Responsibilities]
+- **ID:** 20232090
 - **Email:** 3930098362@qq.com
 
 ### Member 2
 - **Name:** Wu Runxin
-- **Responsibilities:** [Key Responsibilities]
+- **ID:**20232083
 - **Email:** 3282982622@qq.com
 
 ### Member 3
 - **Name:** Zhao Meiling
-
-- **Responsibilities:** [Key Responsibilities]
+- **ID:**20232089
 - **Email:** 2804973446@qq.com
 
 ## Overview 项目概述
