@@ -1,7 +1,9 @@
 // API服务层，负责与后端通信
 
 // API基础URL
-const API_BASE_URL = 'http://localhost:3000/api';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL
+  ? `${import.meta.env.VITE_API_BASE_URL}/api`
+  : "http://localhost:8080/api";
 
 // 通用请求函数
 async function request(endpoint, options = {}) {

@@ -1,3 +1,4 @@
+
 import './style.css';
 // 导入页面组件
 import { renderHomePage, initHomePage } from './pages/HomePage.js';
@@ -325,11 +326,19 @@ async function handleHomePage() {
     app.innerHTML = '<div class="loading">Loading news...</div>';
     
     // 从API获取新闻数据
-    const response = await apiService.news.getNews();
-    const newsData = response.data || [];
-    
-    // 渲染页面
-    app.innerHTML = renderHomePage(newsData);
+     const backendOnline = await isBackendAvailable();
+let newsData = [];
+
+if (backendOnline) {
+  console.log("✅ Backend online, fetching real data...");
+  const response = await apiService.news.getNews();
+  newsData = response?.data || [];
+} else {
+  console.warn("⚠️ Backend not reachable, using mock data instead.");
+  newsData = mockNewsData;
+}
+app.innerHTML = renderHomePage(newsData);
+
     
     initHomePage({
       onCategoryChange: (category, categoryLower) => {
@@ -395,6 +404,16 @@ async function handleHomePage() {
       console.error('Failed to load news from API:', error);
       console.log('Using mock data instead...');
       // 使用备用的mock数据
+      // 检查后端是否可连接
+async function isBackendAvailable() {
+  try {
+    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'}/api/news`, { method: 'HEAD' });
+    return res.ok;
+  } catch (e) {
+    return false;
+  }
+}
+
       app.innerHTML = renderHomePage(mockNewsData);
       
       // 重新初始化页面事件处理
