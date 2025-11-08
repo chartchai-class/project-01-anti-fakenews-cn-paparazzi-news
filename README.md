@@ -1,6 +1,6 @@
 # Truth Moment - Anti Fake News Platform
 
-![System Cover](system_cover.png)
+![System Cover](system_cover.svg)
 
 *This README file is primarily in English with Chinese annotations for checking purposes. Chinese annotations can be removed after review.*
 
