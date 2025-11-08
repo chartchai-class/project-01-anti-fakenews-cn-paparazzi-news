@@ -1,11 +1,11 @@
-// VoteBar.js - 投票组件
+// VoteBar.js - Voting Component
 
 /**
  * 渲染投票条
- * @param {Object} voteData - 投票数据
- * @param {number} voteData.trustworthy - 可信投票数
- * @param {number} voteData.notTrustworthy - 不可信投票数
- * @param {number} voteData.notSure - 不确定投票数
+ * @param {Object} voteData - Voting data
+ * @param {number} voteData.trustworthy - Trustworthy votes
+   * @param {number} voteData.notTrustworthy - Not trustworthy votes
+   * @param {number} voteData.notSure - Not sure votes
  * @returns {string} - HTML字符串
  */
 export function renderVoteBar(voteData = {}) {
@@ -17,56 +17,65 @@ export function renderVoteBar(voteData = {}) {
   const notTrustworthyPercent = totalVotes > 0 ? Math.round((notTrustworthy / totalVotes) * 100) : 0;
   const notSurePercent = totalVotes > 0 ? Math.round((notSure / totalVotes) * 100) : 0;
   
+  // Determine trust level and text
+  let trustLevelText = 'Unknown';
+  let trustLevelClass = '';
+  
+  if (trustworthyPercent >= 70) {
+    trustLevelText = 'Highly Trustworthy';
+    trustLevelClass = 'trust-high';
+  } else if (trustworthyPercent >= 50) {
+    trustLevelText = 'Generally Trustworthy';
+    trustLevelClass = 'trust-medium';
+  } else if (notTrustworthyPercent >= 50) {
+    trustLevelText = 'Not Trustworthy';
+    trustLevelClass = 'trust-low';
+  } else {
+    trustLevelText = 'Questionable';
+    trustLevelClass = 'trust-medium';
+  }
+  
   return `
-    <div class="vote-bar">
-      <div class="vote-header">
-        <h4>Community Trust Vote</h4>
-        <span class="vote-count">${totalVotes} votes</span>
-      </div>
+    <div class="community-trust-panel">
+      <h3 class="panel-title">Community Trust Assessment</h3>
       
-      <div class="vote-buttons">
-        <button class="vote-button trustworthy" data-vote="trustworthy">
-          <span class="vote-icon">👍</span>
-          <span class="vote-label">Trustworthy</span>
-          <span class="vote-count">${trustworthy}</span>
-          <span class="vote-percentage">${trustworthyPercent}%</span>
-        </button>
-        <button class="vote-button not-sure" data-vote="notSure">
-          <span class="vote-icon">🤔</span>
-          <span class="vote-label">Not Sure</span>
-          <span class="vote-count">${notSure}</span>
-          <span class="vote-percentage">${notSurePercent}%</span>
-        </button>
-        <button class="vote-button not-trustworthy" data-vote="notTrustworthy">
-          <span class="vote-icon">👎</span>
-          <span class="vote-label">Not Trustworthy</span>
-          <span class="vote-count">${notTrustworthy}</span>
-          <span class="vote-percentage">${notTrustworthyPercent}%</span>
-        </button>
-      </div>
-      
-      <div class="vote-results">
-        <div class="vote-progress-bar">
-          <div 
-            class="vote-progress trustworthy" 
-            style="width: ${trustworthyPercent}%"
-            title="${trustworthyPercent}% Trustworthy"
-          ></div>
-          <div 
-            class="vote-progress not-sure" 
-            style="width: ${notSurePercent}%"
-            title="${notSurePercent}% Not Sure"
-          ></div>
-          <div 
-            class="vote-progress not-trustworthy" 
-            style="width: ${notTrustworthyPercent}%"
-            title="${notTrustworthyPercent}% Not Trustworthy"
-          ></div>
+      <div class="trust-level">
+        <div class="trust-progress-container">
+          <div class="trust-progress-bar">
+            <div 
+              class="trust-progress trustworthy" 
+              style="width: ${trustworthyPercent}%"
+            ></div>
+            <div 
+              class="trust-progress not-sure" 
+              style="width: ${notSurePercent}%"
+            ></div>
+            <div 
+              class="trust-progress not-trustworthy" 
+              style="width: ${notTrustworthyPercent}%"
+            ></div>
+          </div>
+          <div class="trust-percentage ${trustLevelClass}">${trustworthyPercent}% Trustworthy</div>
         </div>
       </div>
       
+      <div class="trust-vote-buttons">
+        <button class="trust-vote-btn" data-vote="trustworthy">
+          <span class="vote-radio ${trustworthyPercent > notTrustworthyPercent && trustworthyPercent > notSurePercent ? 'checked' : ''}"></span>
+          <span class="vote-label">Trustworthy</span>
+        </button>
+        <button class="trust-vote-btn" data-vote="notSure">
+          <span class="vote-radio"></span>
+          <span class="vote-label">Not Sure</span>
+        </button>
+        <button class="trust-vote-btn" data-vote="notTrustworthy">
+          <span class="vote-radio"></span>
+          <span class="vote-label">Not Trustworthy</span>
+        </button>
+      </div>
+      
       <div class="vote-message" id="vote-message">
-        <!-- 投票提示信息将在这里显示 -->
+        <!-- Vote message will be displayed here -->
       </div>
     </div>
   `;
@@ -74,21 +83,21 @@ export function renderVoteBar(voteData = {}) {
 
 /**
  * 初始化投票条的交互
- * @param {Function} onVote - 投票回调函数
+ * @param {Function} onVote - Voting callback function
  */
 export function initVoteBar(onVote) {
-  const voteButtons = document.querySelectorAll('.vote-button');
+  const voteButtons = document.querySelectorAll('.trust-vote-btn');
   let userVoted = false;
   let currentVote = null;
   
-  // 显示投票消息
+  // Display vote message
   function showVoteMessage(message, type = 'info') {
     const messageElement = document.getElementById('vote-message');
     messageElement.textContent = message;
     messageElement.className = `vote-message ${type}`;
     messageElement.style.display = 'block';
     
-    // 3秒后隐藏消息
+    // Hide message after 3 seconds
     setTimeout(() => {
       messageElement.style.display = 'none';
     }, 3000);
@@ -97,26 +106,21 @@ export function initVoteBar(onVote) {
   voteButtons.forEach(button => {
     button.addEventListener('click', () => {
       const voteType = button.getAttribute('data-vote');
-      const voteCountElement = button.querySelector('.vote-count');
-      const currentCount = parseInt(voteCountElement.textContent);
       
-      // 如果已经投过相同类型的票，提示用户
+      // If already voted for the same type, show message
       if (userVoted && currentVote === voteType) {
-        showVoteMessage('You have already voted this option!', 'warning');
+        showVoteMessage('You have already voted for this option!', 'warning');
         return;
       }
       
-      // 如果用户已经投过不同类型的票，先恢复之前的投票
+      // If user has voted for a different type, reset previous vote
       if (userVoted && currentVote !== voteType) {
-        const previousButton = document.querySelector(`.vote-button[data-vote="${currentVote}"]`);
-        const previousCountElement = previousButton.querySelector('.vote-count');
-        previousCountElement.textContent = parseInt(previousCountElement.textContent) - 1;
-        previousButton.classList.remove('voted');
+        const previousButton = document.querySelector(`.trust-vote-btn[data-vote="${currentVote}"]`);
+        previousButton.querySelector('.vote-radio').classList.remove('checked');
       }
       
-      // 增加当前投票数
-      voteCountElement.textContent = currentCount + 1;
-      button.classList.add('voted');
+      // 设置当前投票选中状态
+      button.querySelector('.vote-radio').classList.add('checked');
       
       // 更新状态
       userVoted = true;
@@ -127,49 +131,68 @@ export function initVoteBar(onVote) {
         onVote(voteType);
       }
       
-      // 显示成功消息
+      // Show success message
       const voteLabels = {
         trustworthy: 'Trustworthy',
         notTrustworthy: 'Not Trustworthy',
         notSure: 'Not Sure'
       };
-      showVoteMessage(`Thank you for voting ${voteLabels[voteType]}!`, 'success');
+      showVoteMessage(`Thank you for your vote! You consider this news ${voteLabels[voteType]}.`, 'success');
       
-      // 更新进度条
-      updateVoteProgress();
+      // Update progress bar (simplified, in real app should be based on backend data)
+      updateTrustProgress(voteType);
     });
   });
   
-  // 更新投票进度条
-  function updateVoteProgress() {
-    const voteButtons = document.querySelectorAll('.vote-button');
-    let trustworthy = 0, notTrustworthy = 0, notSure = 0;
+  // Update trust progress bar
+  function updateTrustProgress(voteType) {
+    // Get current progress bar widths
+    let trustworthyWidth = parseInt(document.querySelector('.trust-progress.trustworthy').style.width) || 0;
+    let notSureWidth = parseInt(document.querySelector('.trust-progress.not-sure').style.width) || 0;
+    let notTrustworthyWidth = parseInt(document.querySelector('.trust-progress.not-trustworthy').style.width) || 0;
     
-    voteButtons.forEach(button => {
-      const voteType = button.getAttribute('data-vote');
-      const count = parseInt(button.querySelector('.vote-count').textContent);
-      
-      if (voteType === 'trustworthy') trustworthy = count;
-      else if (voteType === 'notTrustworthy') notTrustworthy = count;
-      else if (voteType === 'notSure') notSure = count;
-    });
+    // Simplified progress bar update logic
+    // In real app, should recalculate percentages based on total votes
+    if (voteType === 'trustworthy') {
+      trustworthyWidth += 5;
+      notSureWidth = Math.max(0, notSureWidth - 2);
+      notTrustworthyWidth = Math.max(0, notTrustworthyWidth - 3);
+    } else if (voteType === 'notSure') {
+      notSureWidth += 5;
+      trustworthyWidth = Math.max(0, trustworthyWidth - 2);
+      notTrustworthyWidth = Math.max(0, notTrustworthyWidth - 3);
+    } else if (voteType === 'notTrustworthy') {
+      notTrustworthyWidth += 5;
+      trustworthyWidth = Math.max(0, trustworthyWidth - 3);
+      notSureWidth = Math.max(0, notSureWidth - 2);
+    }
     
-    const totalVotes = trustworthy + notTrustworthy + notSure;
+    // Ensure total is 100%
+    const totalWidth = trustworthyWidth + notSureWidth + notTrustworthyWidth;
+    if (totalWidth > 0) {
+      trustworthyWidth = Math.round((trustworthyWidth / totalWidth) * 100);
+      notSureWidth = Math.round((notSureWidth / totalWidth) * 100);
+      notTrustworthyWidth = Math.round((notTrustworthyWidth / totalWidth) * 100);
+    }
     
-    if (totalVotes > 0) {
-      const trustworthyPercent = Math.round((trustworthy / totalVotes) * 100);
-      const notTrustworthyPercent = Math.round((notTrustworthy / totalVotes) * 100);
-      const notSurePercent = Math.round((notSure / totalVotes) * 100);
-      
-      document.querySelector('.vote-progress.trustworthy').style.width = `${trustworthyPercent}%`;
-      document.querySelector('.vote-progress.not-sure').style.width = `${notSurePercent}%`;
-      document.querySelector('.vote-progress.not-trustworthy').style.width = `${notTrustworthyPercent}%`;
-      
-      document.querySelector('.vote-button.trustworthy .vote-percentage').textContent = `${trustworthyPercent}%`;
-      document.querySelector('.vote-button.not-sure .vote-percentage').textContent = `${notSurePercent}%`;
-      document.querySelector('.vote-button.not-trustworthy .vote-percentage').textContent = `${notTrustworthyPercent}%`;
-      
-      document.querySelector('.vote-count').textContent = `${totalVotes} votes`;
+    // Update progress bars
+    document.querySelector('.trust-progress.trustworthy').style.width = `${trustworthyWidth}%`;
+    document.querySelector('.trust-progress.not-sure').style.width = `${notSureWidth}%`;
+    document.querySelector('.trust-progress.not-trustworthy').style.width = `${notTrustworthyWidth}%`;
+    
+    // Update percentage display
+    const percentElement = document.querySelector('.trust-percentage');
+    percentElement.textContent = `${trustworthyWidth}% Trustworthy`;
+    
+    // Update trust level
+    if (trustworthyWidth >= 70) {
+      percentElement.className = 'trust-percentage trust-high';
+    } else if (trustworthyWidth >= 50) {
+      percentElement.className = 'trust-percentage trust-medium';
+    } else if (notTrustworthyWidth >= 50) {
+      percentElement.className = 'trust-percentage trust-low';
+    } else {
+      percentElement.className = 'trust-percentage trust-medium';
     }
   }
 }

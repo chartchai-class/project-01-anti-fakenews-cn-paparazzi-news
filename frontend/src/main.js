@@ -563,7 +563,7 @@ async function handleNewsDetailPage(params) {
   
   try {
     // 显示加载状态
-    app.innerHTML = '<div class="loading">Loading news details...</div>';
+    app.innerHTML = '<div class="loading">加载新闻详情...</div>';
     
     // 并行获取新闻详情和评论
     const [newsResponse, commentsResponse] = await Promise.all([
@@ -576,8 +576,12 @@ async function handleNewsDetailPage(params) {
     // 从新闻数据中提取投票信息，如果没有则使用默认值
     const voteData = newsDetail.votes || { trustworthy: 0, notTrustworthy: 0, notSure: 0 };
     
+    // 计算信任度百分比
+    const totalVotes = voteData.trustworthy + voteData.notTrustworthy + voteData.notSure;
+    const trustPercentage = totalVotes > 0 ? Math.round((voteData.trustworthy / totalVotes) * 100) : 0;
+    
     // 渲染页面
-    app.innerHTML = renderNewsDetailPage(newsDetail, comments, voteData);
+    app.innerHTML = renderNewsDetailPage(newsDetail, comments, voteData, trustPercentage);
     
     initNewsDetailPage({
       onBack: () => {
@@ -587,23 +591,24 @@ async function handleNewsDetailPage(params) {
         try {
           await apiService.news.voteNews(id, voteType);
           // 投票成功后刷新页面或更新UI
-          alert('Vote submitted successfully!');
+          alert('投票提交成功！');
           // 重新加载页面以显示最新投票结果
           handleNewsDetailPage(params);
         } catch (error) {
           console.error('Vote failed:', error);
-          alert('Failed to submit vote. Please try again.');
+          alert('提交投票失败，请重试。');
         }
       },
       onCommentSubmit: async (commentData) => {
         try {
-          await apiService.news.addComment(id, commentData.content);
-          alert('Comment submitted successfully!');
+          // 包含rating信息的评论提交
+          await apiService.news.addComment(id, commentData.content, commentData.rating);
+          alert('评论提交成功！');
           // 重新加载页面以显示最新评论
           handleNewsDetailPage(params);
         } catch (error) {
           console.error('Comment submission failed:', error);
-          alert('Failed to submit comment. Please try again.');
+          alert('提交评论失败，请重试。');
         }
       },
       onCommentLike: async (commentId) => {
@@ -613,7 +618,7 @@ async function handleNewsDetailPage(params) {
           handleNewsDetailPage(params);
         } catch (error) {
           console.error('Comment like failed:', error);
-          alert('Failed to like comment. Please try again.');
+          alert('点赞失败，请重试。');
         }
       },
       onCommentDislike: async (commentId) => {
@@ -623,49 +628,15 @@ async function handleNewsDetailPage(params) {
           handleNewsDetailPage(params);
         } catch (error) {
           console.error('Comment dislike failed:', error);
-          alert('Failed to dislike comment. Please try again.');
+          alert('点踩失败，请重试。');
         }
       },
-      onCommentReply: (commentId) => {
-        // 在实际应用中，可以实现回复功能
-        alert(`Reply to comment ${commentId}`);
-      },
-      onLoadMoreComments: async () => {
-        try {
-          const currentPage = 2;
-          const moreCommentsResponse = await apiService.news.getComments(id, { page: currentPage });
-          const moreComments = moreCommentsResponse.data || [];
-          
-          if (moreComments.length > 0) {
-            // 添加更多评论到UI
-            const commentsSection = document.querySelector('.comments-container');
-            moreComments.forEach(comment => {
-              // 创建评论元素并添加到页面
-              const commentElement = document.createElement('div');
-              commentElement.className = 'comment-item';
-              commentElement.innerHTML = `
-                <div class="comment-header">
-                  <span class="comment-author">${comment.username || 'Anonymous'}</span>
-                  <span class="comment-date">${comment.createdAt || new Date().toISOString()}</span>
-                </div>
-                <div class="comment-content">${comment.content}</div>
-                <div class="comment-actions">
-                  <button class="like-btn" data-comment-id="${comment.id}">Like (${comment.likes || 0})</button>
-                  <button class="dislike-btn" data-comment-id="${comment.id}">Dislike (${comment.dislikes || 0})</button>
-                  <button class="reply-btn" data-comment-id="${comment.id}">Reply</button>
-                </div>
-              `;
-              commentsSection.appendChild(commentElement);
-            });
-            
-            return true;
-          }
-          return false; // 没有更多评论
-        } catch (error) {
-          console.error('Failed to load more comments:', error);
-          alert('Failed to load more comments. Please try again.');
-          return false;
-        }
+      onCommentSort: (sortType) => {
+        console.log(`Sort comments by ${sortType}`);
+        // 排序逻辑可以在这里实现
+        // 由于我们使用的是mock数据，可以简单地重新加载页面
+        // 在实际应用中，可以在客户端排序评论列表
+        handleNewsDetailPage(params);
       }
     });
   } catch (error) {
@@ -677,8 +648,12 @@ async function handleNewsDetailPage(params) {
     const comments = mockComments[id] || mockComments['1'] || [];
     const voteData = mockVoteData[id] || mockVoteData['1'] || { trustworthy: 0, notTrustworthy: 0, notSure: 0 };
     
+    // 计算信任度百分比
+    const totalVotes = voteData.trustworthy + voteData.notTrustworthy + voteData.notSure;
+    const trustPercentage = totalVotes > 0 ? Math.round((voteData.trustworthy / totalVotes) * 100) : 0;
+    
     // 渲染页面
-    app.innerHTML = renderNewsDetailPage(newsDetail, comments, voteData);
+    app.innerHTML = renderNewsDetailPage(newsDetail, comments, voteData, trustPercentage);
     
     // 重新初始化页面事件处理
     initNewsDetailPage({
@@ -687,26 +662,65 @@ async function handleNewsDetailPage(params) {
       },
       onVote: (voteType) => {
         console.log(`Vote ${voteType} for news ${id} (mock mode)`);
-        alert('Thank you for your feedback!');
+        alert('感谢您的反馈！');
       },
       onCommentSubmit: (commentData) => {
-        console.log(`Add comment to news ${id}: ${commentData.content} (mock mode)`);
-        alert('Comment added successfully!');
+        console.log(`Add comment to news ${id}: ${commentData.content}, rating: ${commentData.rating} (mock mode)`);
+        alert('评论添加成功！');
       },
       onCommentLike: (commentId) => {
         console.log(`Like comment ${commentId} (mock mode)`);
-        alert('Comment liked!');
+        alert('评论已点赞！');
       },
       onCommentDislike: (commentId) => {
         console.log(`Dislike comment ${commentId} (mock mode)`);
-        alert('Comment disliked!');
+        alert('评论已点踩！');
       },
-      onCommentReply: (commentId) => {
-        alert(`Reply to comment ${commentId}`);
-      },
-      onLoadMoreComments: () => {
-        alert('No more mock comments available');
-        return false;
+      onCommentSort: (sortType) => {
+        console.log(`Sort comments by ${sortType} (mock mode)`);
+        // 在mock模式下，可以简单地按照不同排序重新排列评论
+        let sortedComments = [...comments];
+        if (sortType === 'hottest') {
+          // 按照点赞数排序
+          sortedComments.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+        } else {
+          // 按照最新排序（默认）
+          sortedComments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        }
+        
+        // 更新评论区显示
+        const commentsList = document.querySelector('.comments-list');
+        commentsList.innerHTML = sortedComments.map(comment => {
+          return `
+            <div class="comment-card" data-comment-id="${comment.id}">
+              <div class="comment-header">
+                <img src="https://picsum.photos/seed/${comment.userId}/40/40" alt="${comment.username}" class="comment-avatar">
+                <div class="comment-meta">
+                  <div class="comment-user-info">
+                    <h4 class="comment-username">${comment.username}</h4>
+                    <span class="comment-rating-badge ${comment.rating === 'true' ? 'trustworthy' : 'not-trustworthy'}">
+                      ${comment.rating === 'true' ? '✅' : '❌'} 标记为${comment.rating === 'true' ? '可信' : '不可信'}
+                    </span>
+                  </div>
+                  <p class="comment-time">${new Date(comment.createdAt).toLocaleString('zh-CN')}</p>
+                </div>
+              </div>
+              <div class="comment-content">
+                <p>${comment.content}</p>
+              </div>
+              <div class="comment-actions">
+                <button class="comment-action-btn like-btn">
+                  <span class="action-icon">🔥</span>
+                  <span class="action-count">${comment.likes || 0}</span>
+                </button>
+                <button class="comment-action-btn dislike-btn">
+                  <span class="action-icon">👎</span>
+                  <span class="action-count">${comment.dislikes || 0}</span>
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
       }
     });
   }

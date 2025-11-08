@@ -1,13 +1,13 @@
-// NewsDetailPage.js - 新闻详情页
+// NewsDetailPage.js - News Detail Page
 import { renderVoteBar, initVoteBar } from '../components/VoteBar.js';
 import { renderCommentSection, initCommentSection } from '../components/CommentSection.js';
 
 /**
- * 渲染新闻详情页
- * @param {Object} newsDetail - 新闻详情数据
- * @param {Array} comments - 评论列表
- * @param {Object} voteData - 投票数据
- * @returns {string} - HTML字符串
+ * Render news detail page
+ * @param {Object} newsDetail - News detail data
+ * @param {Array} comments - Comments list
+ * @param {Object} voteData - Vote data
+ * @returns {string} - HTML string
  */
 export function renderNewsDetailPage(newsDetail = {}, comments = [], voteData = {}) {
   // 如果没有新闻数据，显示错误信息
@@ -103,12 +103,12 @@ export function renderNewsDetailPage(newsDetail = {}, comments = [], voteData = 
     <main class="main-content">
       <section class="news-detail-section">
         <div class="section-container">
-          <!-- 返回按钮 -->
+          <!-- Back button -->
           <div class="back-button-container">
             <a href="#" class="back-button" id="back-button">← Back to News List</a>
           </div>
           
-          <!-- 新闻标题和元数据 -->
+          <!-- News title and metadata -->
           <div class="news-detail-header">
             <div class="news-meta-detail">
               <span class="news-source">${newsDetail.source}</span>
@@ -119,12 +119,12 @@ export function renderNewsDetailPage(newsDetail = {}, comments = [], voteData = 
             ${renderTrustBadge(newsDetail.trustLevel, newsDetail.trustScore)}
           </div>
           
-          <!-- 新闻图片 -->
+          <!-- News image -->
           <div class="news-detail-image">
             <img src="${newsDetail.imageUrl || 'https://picsum.photos/seed/default/1200/600'}" alt="${newsDetail.title}">
           </div>
           
-          <!-- 新闻内容 -->
+          <!-- News content -->
           <div class="news-detail-content">
             <div class="news-detail-summary">
               <p>${newsDetail.summary}</p>
@@ -138,7 +138,7 @@ export function renderNewsDetailPage(newsDetail = {}, comments = [], voteData = 
             </div>
           </div>
           
-          <!-- 分享按钮 -->
+          <!-- Share buttons -->
           <div class="news-detail-actions">
             <div class="share-buttons">
               <button class="share-button" data-platform="facebook">Share on Facebook</button>
@@ -150,14 +150,14 @@ export function renderNewsDetailPage(newsDetail = {}, comments = [], voteData = 
         </div>
       </section>
       
-      <!-- 投票组件 -->
+      <!-- Voting component -->
       <section class="vote-section">
         <div class="section-container">
           ${renderVoteBar(voteData)}
         </div>
       </section>
       
-      <!-- 评论组件 -->
+      <!-- Comment component -->
       ${renderCommentSection(comments, newsDetail.id)}
     </main>
     
@@ -178,27 +178,27 @@ export function renderNewsDetailPage(newsDetail = {}, comments = [], voteData = 
         </div>
         <div class="footer-contact">
           <h4>Contact Us</h4>
-          <p>Email: contact@truthmoment.com</p>
+          <p>Email: hhibo2778@gmail.com</p>
           <p>Phone: 400-123-4567</p>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2024 Truth Moment - Anti Fake News Platform. All rights reserved.</p>
+        <p>&copy; 2025 Truth Moment - Anti Fake News Platform. All rights reserved.</p>
       </div>
     </footer>
   `;
 }
 
 /**
- * 初始化新闻详情页交互
- * @param {Object} options - 配置选项
- * @param {Function} options.onBack - 返回回调
- * @param {Function} options.onVote - 投票回调
- * @param {Function} options.onCommentSubmit - 提交评论回调
- * @param {Function} options.onCommentLike - 点赞评论回调
- * @param {Function} options.onCommentDislike - 点踩评论回调
- * @param {Function} options.onCommentReply - 回复评论回调
- * @param {Function} options.onLoadMoreComments - 加载更多评论回调
+ * Initialize news detail page interactions
+ * @param {Object} options - Configuration options
+ * @param {Function} options.onBack - Back button callback
+ * @param {Function} options.onVote - Vote callback
+ * @param {Function} options.onCommentSubmit - Submit comment callback
+ * @param {Function} options.onCommentLike - Like comment callback
+ * @param {Function} options.onCommentDislike - Dislike comment callback
+ * @param {Function} options.onCommentReply - Reply to comment callback
+ * @param {Function} options.onLoadMoreComments - Load more comments callback
  */
 export function initNewsDetailPage(options = {}) {
   const { 
