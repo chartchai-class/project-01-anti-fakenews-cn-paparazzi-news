@@ -6,6 +6,15 @@ import { renderCategoryPage, initCategoryPage } from './pages/CategoryPage.js';
 import { renderNewsDetailPage, initNewsDetailPage } from './pages/NewsDetailPage.js';
 // 导入API服务
 import apiService from './api/apiService.js';
+     // 检查后端是否可连接
+async function isBackendAvailable() {
+  try {
+    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'}/api/news`, { method: 'HEAD' });
+    return res.ok;
+  } catch (e) {
+    return false;
+  }
+}
 
 // Mock 数据
 const mockNewsData = [
@@ -404,15 +413,7 @@ app.innerHTML = renderHomePage(newsData);
       console.error('Failed to load news from API:', error);
       console.log('Using mock data instead...');
       // 使用备用的mock数据
-      // 检查后端是否可连接
-async function isBackendAvailable() {
-  try {
-    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'}/api/news`, { method: 'HEAD' });
-    return res.ok;
-  } catch (e) {
-    return false;
-  }
-}
+ 
 
       app.innerHTML = renderHomePage(mockNewsData);
       
