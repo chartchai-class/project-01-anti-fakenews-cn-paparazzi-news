@@ -95,7 +95,6 @@ export function renderCategoryPage(category = 'All', newsData = []) {
     </footer>
   `;
 }
-
 /**
  * 初始化分类新闻页交互
  * @param {Object} options - 配置选项

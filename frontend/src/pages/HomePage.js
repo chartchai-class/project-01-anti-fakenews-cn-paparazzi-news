@@ -122,7 +122,6 @@ export function initHomePage(options = {}) {
         onLoadMore().then(() => {
           loadMoreButton.textContent = 'Load More';
           loadMoreButton.disabled = false;
-          // 重新初始化新加载的新闻卡片
           initNewsCards(onNewsClick);
         }).catch(() => {
           loadMoreButton.textContent = 'Load More';

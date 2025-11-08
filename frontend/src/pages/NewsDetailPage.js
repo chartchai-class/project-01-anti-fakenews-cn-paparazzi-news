@@ -264,8 +264,6 @@ export function initNewsDetailPage(options = {}) {
       }
     });
   });
-  
-  // Header滚动效果
   const header = document.getElementById('header');
   let lastScrollTop = 0;
   
@@ -284,7 +282,6 @@ export function initNewsDetailPage(options = {}) {
   // Mobile menu toggle
   const mobileMenuButton = document.querySelector('.mobile-menu-button');
   const navList = document.querySelector('.nav-list');
-  
   if (mobileMenuButton && navList) {
     mobileMenuButton.addEventListener('click', () => {
       navList.classList.toggle('nav-list-open');
