@@ -392,11 +392,31 @@ async function handleHomePage() {
       }
     });
   } catch (error) {
-    console.error('Failed to load news:', error);
-    app.innerHTML = '<div class="error">Failed to load news. Please try again later.</div>';
+      console.error('Failed to load news from API:', error);
+      console.log('Using mock data instead...');
+      // 使用备用的mock数据
+      app.innerHTML = renderHomePage(mockNewsData);
+      
+      // 重新初始化页面事件处理
+      initHomePage({
+        onCategoryChange: (category, categoryLower) => {
+          if (categoryLower === 'all') {
+            router.navigate('');
+          } else {
+            router.navigate(`/category/${categoryLower}`);
+          }
+        },
+        onNewsClick: (newsId) => {
+          router.navigate(`/news/${newsId}`);
+        },
+        onLoadMore: async () => {
+          console.log('No more mock data available');
+          alert('No more news available at this time.');
+          return false;
+        }
+      });
+    }
   }
-}
-}
 
 // 渲染分类页面
 async function handleCategoryPage(params) {
@@ -482,11 +502,39 @@ async function handleCategoryPage(params) {
       }
     });
   } catch (error) {
-    console.error('Failed to load category news:', error);
-    app.innerHTML = `<div class="error">Failed to load ${normalizedCategory} news. Please try again later.</div>`;
+    console.error(`Failed to load ${normalizedCategory} news from API:`, error);
+    console.log('Using filtered mock data instead...');
+    // 使用过滤后的mock数据
+    let filteredNews = mockNewsData;
+    if (category.toLowerCase() !== 'all') {
+      filteredNews = mockNewsData.filter(news => 
+        news.category.toLowerCase() === category.toLowerCase()
+      );
+    }
+    
+    // 渲染页面
+    app.innerHTML = renderCategoryPage(normalizedCategory, filteredNews);
+    
+    // 重新初始化页面事件处理
+    initCategoryPage({
+      onCategoryChange: (newCategory, newCategoryLower) => {
+        if (newCategoryLower === 'all') {
+          router.navigate('');
+        } else {
+          router.navigate(`/category/${newCategoryLower}`);
+        }
+      },
+      onNewsClick: (newsId) => {
+        router.navigate(`/news/${newsId}`);
+      },
+      onLoadMore: async () => {
+        console.log('No more mock data available');
+        alert('No more news available at this time.');
+        return false;
+      }
+    });
   }
-}
-}
+  }
 
 // 渲染新闻详情页
 async function handleNewsDetailPage(params) {
@@ -601,16 +649,53 @@ async function handleNewsDetailPage(params) {
       }
     });
   } catch (error) {
-    console.error('Failed to load news details:', error);
-    app.innerHTML = '<div class="error">Failed to load news details. Please try again later.</div>';
+    console.error('Failed to load news details from API:', error);
+    console.log('Using mock data instead...');
+    
+    // 使用mock数据
+    const newsDetail = mockNewsData.find(news => news.id === parseInt(id)) || mockNewsData[0];
+    const comments = mockComments[id] || mockComments['1'] || [];
+    const voteData = mockVoteData[id] || mockVoteData['1'] || { trustworthy: 0, notTrustworthy: 0, notSure: 0 };
+    
+    // 渲染页面
+    app.innerHTML = renderNewsDetailPage(newsDetail, comments, voteData);
+    
+    // 重新初始化页面事件处理
+    initNewsDetailPage({
+      onBack: () => {
+        history.back();
+      },
+      onVote: (voteType) => {
+        console.log(`Vote ${voteType} for news ${id} (mock mode)`);
+        alert('Thank you for your feedback!');
+      },
+      onCommentSubmit: (commentData) => {
+        console.log(`Add comment to news ${id}: ${commentData.content} (mock mode)`);
+        alert('Comment added successfully!');
+      },
+      onCommentLike: (commentId) => {
+        console.log(`Like comment ${commentId} (mock mode)`);
+        alert('Comment liked!');
+      },
+      onCommentDislike: (commentId) => {
+        console.log(`Dislike comment ${commentId} (mock mode)`);
+        alert('Comment disliked!');
+      },
+      onCommentReply: (commentId) => {
+        alert(`Reply to comment ${commentId}`);
+      },
+      onLoadMoreComments: () => {
+        alert('No more mock comments available');
+        return false;
+      }
+    });
   }
-}
-}
+  }
 
-// 设置路由
-router.addRoute('', handleHomePage);
-router.addRoute('/category/:category', handleCategoryPage);
-router.addRoute('/news/:id', handleNewsDetailPage);
+  // 设置路由
+  router.addRoute('', handleHomePage);
+  router.addRoute('/category/:category', handleCategoryPage);
+  router.addRoute('/news/:id', handleNewsDetailPage);
 router.setDefault(handleHomePage);
 
 // 添加加载和错误状态的样式
