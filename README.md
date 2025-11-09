@@ -13,16 +13,51 @@ The project is deployed on Vercel. You can access it at:
 - **Name:** Shen Xinyan
 - **ID:** 20232090
 - **Email:** 3930098362@qq.com
+- **Role:** Backend Lead
+
+Designed system architecture (API specifications, data models)
+
+Implemented backend services (Node.js / Express / MySQL)
+
+Built and managed database schema (news, categories, comments, votes)
+
+Developed core business logic (news loading, filtering, pagination, voting, commenting)
+
+Handled deployment and environment configuration (Vercel / Render)
+
+Performed debugging, optimization, and integration
+
+Wrote backend documentation and coordinated technical decisions
 
 ### Member 2
 - **Name:** Wu Runxin
 - **ID:**20232083
 - **Email:** 3282982622@qq.com
+- **Role:**UI/UX Designer
+
+Designed homepage layout, navigation structure, and visual style
+
+Developed News List and Category pages
+
+Implemented UI components and page layout (Vite + CSS)
+
+Assisted with router configuration and navigation flow
+
+Improved overall user experience (scroll behavior, hover effects, responsive design)
 
 ### Member 3
 - **Name:** Zhao Meiling
 - **ID:**20232089
 - **Email:** 2804973446@qq.com
+- **Role:**Developer for News Detail Page
+
+Implemented full article rendering, image display, and trust information
+
+Added click-to-detail navigation logic
+
+Assisted with frontend data presentation and HTML parsing
+
+Contributed to documentation and testing records
 
 ## Overview 项目概述
 A comprehensive fake news detection and verification platform designed to help users identify and combat misinformation. The system leverages community voting, expert analysis, and media literacy education to promote information accuracy.
