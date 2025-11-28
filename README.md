@@ -27,7 +27,6 @@ The project is deployed on Vercel. You can access it at:
 ## Overview 项目概述
 A comprehensive fake news detection and verification platform designed to help users identify and combat misinformation. The system leverages community voting, expert analysis, and media literacy education to promote information accuracy.
 
-
 ## Features 功能特性
 
 ### Core Functionalities 核心功能
@@ -36,42 +35,6 @@ A comprehensive fake news detection and verification platform designed to help u
 - **Comment System**: Engage in discussions with trust ratings for each comment
 - **Trust Index**: Visual representation of news and source credibility
 - **Media Literacy Education**: Resources to help users identify fake news
-
-### Technical Highlights 技术亮点
-- **Frontend**: Modern React-based interface with responsive design
-- **Backend**: RESTful API architecture with secure data handling
-- **Real-time Interactions**: Dynamic updates for votes and comments
-- **Accessibility Support**: WCAG-compliant UI components
-
-## Installation 安装指南
-
-### Prerequisites 先决条件
-- Node.js (v14+)
-- npm or yarn
-
-### Frontend Setup 前端设置
-```bash
-# Navigate to frontend directory
-cd frontend
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-```
-
-### Backend Setup 后端设置
-```bash
-# Navigate to backend directory
-cd backend
-
-# Install dependencies
-npm install
-
-# Start server
-npm start
-```
 
 ## Usage 使用说明
 
@@ -99,16 +62,18 @@ project-01-anti-fakenews-cn-paparazzi-news/
 ## Technologies 技术栈
 
 ### Frontend
-- React
-- JavaScript/ES6+
+- Vue.js
+- vueRouter
+- Pinia
 - CSS3 with modern features
 - Vite (build tool)
 
 ### Backend
-- Node.js
-- Express.js
-- MongoDB (database)
-
+- Java
+- Springboot
+- Maven
+- Mysql
+- Docker
 ## Contributing 贡献指南
 
 Contributions are welcome! Please follow these steps:
